@@ -1,0 +1,51 @@
+# ============================================================
+# coldmail configuration
+# ============================================================
+
+sender:
+  name: "Sarga Prasad RS"
+  email: "sargaprasadrs@gmail.com"        # drafts go into THIS Gmail account
+  phone: ""
+  headline: "Full-stack developer & AI engineer"  # one-liner used in emails
+  summary: |
+    I build web apps and AI/LLM tooling end to end (Python, TypeScript,
+    React, FastAPI). I have shipped side projects and worked on
+    production codebases; I like small teams where I can own things.
+  skills: [python, typescript, react, node, fastapi, postgres, docker, llms, playwright, selenium, scraping]
+  resume_path: ""                          # optional path to resume PDF/DOCX
+
+outreach:
+  # Tone for the cold emails - polite and frank, per your instructions.
+  tone: "polite and frank"
+  greeting: "Hi"                           # Hi / Hello / Dear
+  max_drafts: 10                           # cap on drafts created per run
+  ask: |
+    I'd genuinely like to help here. If there's a role or an open
+    problem I could take a look at, I'd appreciate 10 minutes of your
+    time. Either way, thank you for reading this.
+  signoff: "Thanks,\n{sender_name}"
+
+# ------------------------------------------------------------
+# Discovery: where startup names come from.
+#   - sources: jobicy (free API), remotive (free API)
+#   - you can ALSO add rows manually to data/startups.csv with columns:
+#     company, website, role_title, source_url, notes
+# ------------------------------------------------------------
+discovery:
+  sources: [jobicy, remotive]
+  max_companies: 20
+  # keywords are matched against job title + description to pick
+  # relevant startups (empty = take everything)
+  keywords: []
+
+# ------------------------------------------------------------
+# Ollama (local LLM) for personalized email bodies.
+#   model: any model you have pulled (deepseek-r1:8b, gemma4, ...)
+#   gemma4 was crashing on this machine, so deepseek-r1:8b is the default.
+#   use_ai: false -> always use the hand-written template (fastest).
+#   If Ollama is down, the template is used automatically.
+# ------------------------------------------------------------
+ollama:
+  base_url: "http://localhost:11434"
+  model: "deepseek-r1:8b"
+  use_ai: true

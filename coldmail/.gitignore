@@ -1,0 +1,5 @@
+# Gmail session cookies - DO NOT COMMIT OR SHARE
+data/
+__pycache__/
+*.pyc
+.env

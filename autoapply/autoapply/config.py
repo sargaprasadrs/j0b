@@ -1,0 +1,25 @@
+"""Load autoapply configuration."""
+from __future__ import annotations
+
+import os
+import sys
+from pathlib import Path
+
+import yaml
+
+ROOT = Path(__file__).resolve().parent.parent
+DEFAULT_CONFIG = ROOT / "config.yaml"
+DATA_DIR = ROOT / "data"
+
+
+def ensure_data_dir() -> Path:
+    DATA_DIR.mkdir(exist_ok=True)
+    return DATA_DIR
+
+
+def load_config(path: Path | None = None) -> dict:
+    cfg_path = Path(path) if path else DEFAULT_CONFIG
+    if not cfg_path.exists():
+        sys.exit(f"config file not found: {cfg_path}  (copy config.yaml)")
+    with open(cfg_path, "r", encoding="utf-8") as fh:
+        return yaml.safe_load(fh) or {}

@@ -1,0 +1,17 @@
+# --- secrets / data (never commit) ---
+data/
+.env
+*.env
+!data/.gitkeep
+
+# --- python ---
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# --- os ---
+.DS_Store
+Thumbs.db
+desktop.ini

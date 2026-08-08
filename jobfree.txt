@@ -1,0 +1,404 @@
+================================================================================
+ JOB APPLICATION AUTOMATION TOOLS - RESEARCH NOTES
+ How the big tools work + open-source alternatives (full & partial)
+ Compiled: Aug 2026
+================================================================================
+
+--------------------------------------------------------------------------------
+PART 1 - HOW THE COMMERCIAL TOOLS WORK
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+1. LAZYAPPLY (lazyapply.com) - "Spray and pray" bulk auto-applier
+--------------------------------------------------------------------------------
+WHAT IT IS:
+  A Chrome browser extension that auto-submits job applications in bulk on
+  LinkedIn, Indeed, and ZipRecruiter.
+
+CORE FEATURES:
+  - Auto-apply: batch-apply to jobs based on filters (title, location, seniority)
+  - "Job GPT": AI that fills in standard employment questions (years of
+    experience, work authorization, etc.) from stored user profile data
+  - Smart referral emails: auto-generates + sends personalized referral emails
+    to employees at target companies
+  - Tracking dashboard: real-time analytics of applications sent, responses
+  - Multiple resume profiles (1 on Basic, up to 20 on Ultimate)
+
+HOW THE AUTO-APPLY WORKS TECHNICALLY:
+  - Chrome extension talks directly to the DOM of job boards while the user is
+    logged in
+  - Scripted form filling: locates form fields (e.g., LinkedIn "Easy Apply"
+    dialogs), fills them from the stored profile / GPT answers, simulates
+    clicks to submit
+  - Pacing / anti-blocking: script delays mimic human behavior to dodge
+    rate-limits & bans
+  - Requires a Gmail account to sign up
+
+PRICING (annual only, no free trial, no monthly):
+  - Basic:    $99/yr   (15 applications/day, 1 resume)
+  - Premium:  $149/yr  (150 applications/day, 5 resumes)  <-- most popular
+  - Ultimate: $999/yr  (1,500 applications/day, 20 resumes, advanced analytics)
+  - 30-day limited refund (strict conditions)
+
+--------------------------------------------------------------------------------
+2. FASTAPPLY (fastapply.co) - Quality-first AI tailoring + deep ATS support
+--------------------------------------------------------------------------------
+WHAT IT IS:
+  Web dashboard + Chrome extension that matches jobs 24/7 and auto-applies,
+  with per-job AI resume tailoring.
+
+CORE FEATURES:
+  - 24/7 AI job matcher: background process scanning 12+ job boards, applying
+    the moment a matching job drops (first-to-apply advantage)
+  - Per-job AI resume tailoring: rewrites summary, skills, bullets for each job
+    description's keywords (Pro/Elite tiers)
+  - AI cover letters per job
+  - Covers enterprise ATS: Workday, Greenhouse, Lever, Ashby + LinkedIn,
+    Indeed, ZipRecruiter, Glassdoor, Dice
+  - Centralized application tracker
+
+HOW IT WORKS TECHNICALLY:
+  - Chrome extension + background worker (dashboard controls it)
+  - Deep ATS integrations: scripts handle complex multi-page application flows
+    across different ATS layouts (Workday, Greenhouse forms, etc.) by mapping
+    profile fields programmatically
+  - Dynamic content injection: at apply time, AI evaluates the JD, rewrites
+    resume sections / generates cover letter on the fly, injects into upload
+    fields before submitting
+
+PRICING (monthly, cancel anytime):
+  - Free:  5 application credits (no card)
+  - Starter: $14/mo  (200 credits/mo, 3 resumes, all boards)
+  - Pro:     $29/mo  (500 credits/mo, 5 resumes/7 profiles, AI tailoring + CLs)
+  - Elite:   $49/mo  (1,000 credits/mo, 10 resumes, full AI suite)
+  - Teams/Enterprise: custom (API, SSO)
+  - Credits expire monthly (no rollover)
+
+--------------------------------------------------------------------------------
+3. LOOPCV (loopcv.pro) - Cloud bot + extension hybrid, recruiter outreach
+--------------------------------------------------------------------------------
+WHAT IT IS:
+  Automated AI job-search agent. Scans 30+ job boards from the cloud and
+  auto-applies via a mix of server-side bots and a Chrome extension.
+
+CORE FEATURES:
+  - "The Loop": continuous search loops (titles, locations, seniority,
+    keywords) that scan, filter with ML, and auto-submit applications
+  - One-click apply / manual review mode: pre-screened matches in one dashboard
+  - AI resume rewriting / CV builder + checker (A/B test variants)
+  - Auto-fill applications + ATS integration (types details, uploads CV)
+  - AI-generated answers to open application questions (Premium)
+  - Recruiter email outreach: auto-discovers recruiter emails, sends
+    personalized outreach from templates
+  - Kanban tracker + analytics (open rate, reply rate, interview requests)
+
+HOW IT WORKS TECHNICALLY:
+  - Server-side: scraping pipelines harvest listings from 30+ boards + hidden
+    career pages; ML/NLP filters semantic fit vs your CV before spending credits
+  - Chrome extension ("Loopcv Apply Tool"): used when a job board needs your
+    authenticated session (e.g., LinkedIn) - it piggybacks on your logged-in
+    browser, so they never need your password
+  - Multiple submission paths: ATS form-filling, extension form submission,
+    API integrations, and email outreach for portals that block bots
+
+SUPPORTED: LinkedIn, Indeed, Glassdoor, Workday (ATS), Greenhouse (ATS), 30+ more
+
+PRICING (freemium):
+  - Basic:  free (lifetime ~10 applications)
+  - Standard: ~$19.99/mo (~100 applications or recruiter emails/mo)
+  - Premium:  ~$59.99/mo (up to 300/mo, parallel loops, AI screening,
+               career-page sourcing, AI CV checks)
+  - Advisory/"Done For You": ~$89.99/mo+
+
+--------------------------------------------------------------------------------
+4. JOBRIGHT (jobright.ai) - AI job-search copilot (discovery + matching)
+--------------------------------------------------------------------------------
+WHAT IT IS:
+  AI copilot that builds a skills profile from your resume, matches you to
+  jobs with a compatibility score, and offers autofill + resume tools.
+
+CORE FEATURES:
+  - AI job matching: parses resume (history, skills, tools) with NLP, computes
+    a semantic compatibility score vs job listings (not just keywords)
+  - Data scale: 8M+ active listings indexed; ~400k new postings indexed daily
+  - "Orion" AI career copilot: 24/7 chat for why-you-match breakdowns,
+    interview prep coaching
+  - ATS-friendly resume tailoring (editor adapts bullets/keywords per JD)
+  - Insider connections: recommends alumni / hiring managers for referrals
+  - Application tracker, cover letter generator, H1B visa-sponsorship filter
+
+HOW IT WORKS TECHNICALLY:
+  - Resume parsing with NLP -> structured profile -> embeddings
+  - Semantic matching vs structured job listing embeddings (vector similarity,
+    not keyword match)
+  - Chrome extension (100k+ users): 1-click application autofill into Workday,
+    Greenhouse, Lever, etc. from stored profile
+
+PRICING:
+  - Free tier (limited daily matches, basic resume tools)
+  - Turbo: ~$39.99/mo (or $17.99/week, $89.99/quarter) - unlimited matching,
+    advanced copilot
+
+--------------------------------------------------------------------------------
+5. SIMPLIFY (simplify.jobs / "Simplify Copilot") - Free autofill extension
+--------------------------------------------------------------------------------
+WHAT IT IS:
+  Free, browser-extension-first autofill + job tracker. The "1Password for
+  job applications."
+
+CORE FEATURES:
+  - Universal autofill: works on 100+ job boards & ATS (Workday, Greenhouse,
+    iCIMS, Taleo, Avature, Lever, SmartRecruiters, ...)
+  - AI answers for open-ended questions ("Why do you want to work here?")
+  - LinkedIn/Indeed overlay: flags keywords missing from your resume on the
+    listing page
+  - AI resume builder + ATS scorer (match % vs JD, missing keywords)
+  - Auto job tracker: every submission via the extension is logged to a Kanban
+    dashboard automatically
+
+HOW AUTOFILL WORKS TECHNICALLY:
+  - Browser extension detects application form fields (name, employment
+    history, education, EEO disclosures) by mapping DOM elements
+  - Populates them in one click from your centralized "Simplify Profile"
+  - Open-ended questions -> AI drafts from stored resume/work history
+
+BUSINESS MODEL (how it's free):
+  - Free forever core: profile, tracking, autofill
+  - Employer-paid marketplace: companies pay to post exclusive jobs & access
+    the talent pool
+  - Simplify+ premium tier: advanced AI tools & coaching
+  - States it does NOT sell user data
+
+--------------------------------------------------------------------------------
+6. AIAPPLY (aiapply.co) - Full AI suite + paid auto-apply engine
+--------------------------------------------------------------------------------
+WHAT IT IS:
+  AI job-application suite: resume builder, cover letter generator, interview
+  prep, plus a separately-priced auto-apply engine.
+
+CORE FEATURES:
+  - AI resume builder (ATS-optimized layouts)
+  - Cover letter generator (chat-style, refine like ChatGPT vs the JD)
+  - Auto-apply engine: scans job boards, matches against your questionnaire
+    profile (location, industry, seniority), submits programmatically
+  - Interview prep: role-specific question banks, STAR-method coaching
+
+HOW IT WORKS TECHNICALLY:
+  - Built on LLM APIs (primarily OpenAI GPT-4 family)
+  - Auto-apply: cloud scrapers / automated form-fillers parse listings from
+    portals + company ATS (Greenhouse, Lever, Workday)
+  - Form filling via browser automation scripts or API integrations; relies on
+    DOM element mapping, heuristic field detection, OCR/LLM vision checks to
+    handle different ATS layouts
+
+PRICING (split tiers - confusingly two separate products):
+  - Tools tier: ~$29/mo (resume builder, CL generator, interview prep)
+  - Auto-apply tier: separately priced ~$74-$149/mo depending on quota
+    (e.g., 100 or 250 applications)
+  - No meaningful free trial of the auto-apply engine
+
+--------------------------------------------------------------------------------
+QUICK COMPARISON TABLE
+--------------------------------------------------------------------------------
+  Tool      | Approach                    | Boards/ATS covered      | Model
+  ----------+-----------------------------+-------------------------+------------------
+  LazyApply | Bulk auto-apply ext         | LinkedIn, Indeed, Zip   | Annual $99-999
+  FastApply | 24/7 matcher + AI tailoring | 12+ incl. Workday/GH    | Monthly $14-49
+  LoopCV    | Cloud bots + extension      | 30+ boards + career pgs | Freemium ~$20-60
+  Jobright  | AI matching copilot         | Aggregated 8M+ listings | Freemium $39.99
+  Simplify  | Free autofill extension     | 100+ boards/ATS         | Free (employer-paid)
+  AIApply   | AI suite + auto-apply       | Portals + GH/Lever/Work | $29 + $74-149
+
+  Also notable (same space): Sonara (set-and-forget auto-apply), Jobscan
+  (ATS match % + Auto Apply), Teal (extension + Kanban tracker + AI resume),
+  Huntr (visual job tracker + AI), ApplyMate, ClickUp AI, Sona.
+
+--------------------------------------------------------------------------------
+PART 2 - HOW THE TECHNOLOGY STACKS UP (common ingredients)
+--------------------------------------------------------------------------------
+All of these tools are built from the same handful of building blocks:
+
+  1. JOB DATA ACQUISITION
+     - Scrapers for job boards + company career sites (Selenium, Puppeteer,
+       Playwright, undetected-chromedriver to evade bot detection)
+     - Public job APIs: Adzuna, Jooble, JSearch (RapidAPI), Jobicy, etc.
+     - Aggregation + dedup (the "8M listings / 400k daily" style pipelines)
+  2. RESUME PARSING
+     - PDF/DOCX -> structured data (PDF.js, OCR, LLM parsing)
+     - Extract work history, skills, tools, education
+  3. MATCHING / SCORING
+     - Keyword matching (classic ATS simulation)
+     - Embeddings + semantic similarity (modern, used by Jobright)
+     - Compatibility/ATS score + missing-keyword highlighting
+  4. CONTENT GENERATION (LLMs: OpenAI GPT-4/4o, Claude, Gemini, local via Ollama)
+     - Resume tailoring per job description
+     - Cover letters, referral emails, recruiter outreach
+     - Answers to open application questions
+  5. APPLICATION SUBMISSION
+     - Browser automation (DOM fill + click simulation)
+     - Browser extensions that piggyback on your logged-in session
+       (critical: they never need your password)
+     - ATS-specific handlers (Workday, Greenhouse, Lever, Ashby, iCIMS,
+       Taleo, Avature, SmartRecruiters have different form structures)
+     - Anti-detection: pacing, human-like delays, session reuse
+  6. TRACKING / UI
+     - Kanban boards, dashboards, analytics, resume profiles
+
+  LEGAL/RISK NOTE: Auto-apply on LinkedIn/Indeed violates their ToS; account
+  bans are common. Many tools now pivot to "semi-auto" (pre-fill + user
+  clicks submit) to stay compliant. Enterprise ATS (Workday etc.) have
+  CAPTCHAs and bot detection - don't build this against sites you don't own.
+
+--------------------------------------------------------------------------------
+PART 3 - OPEN-SOURCE ALTERNATIVES (verified on GitHub, Aug 2026)
+--------------------------------------------------------------------------------
+Legend: [AUTO-APPLY] [SCRAPER/DATA] [RESUME/MATCHING] [BUILDER/PARSER]
+        [TRACKER] [COVER LETTER] - stars approx.
+
+--------------------------------------------------------------------------------
+A) FULL/NEAR-FULL AUTO-APPLY BOTS (the "LazyApply/LoopCV" equivalents)
+--------------------------------------------------------------------------------
+1. feder-cr/Jobs_Applier_AI_Agent_AIHawk  [AUTO-APPLY]  ~30.1k stars, Python, AGPL-3.0
+   - The famous "AIHawk". Selenium-based auto-applier for LinkedIn. AI (LLM)
+     tailors resumes & answers per job, then auto-applies. Most-starred
+     open-source auto-applier. Requires your LinkedIn session.
+   - https://github.com/feder-cr/Jobs_Applier_AI_Agent_AIHawk
+
+2. GodsScion/Auto_job_applier_linkedIn  [AUTO-APPLY]  ~2.7k stars, Python, AGPL-3.0
+   - Selenium automation ("Auto Applier") that applies to LinkedIn jobs based
+     on criteria. Topics: easy-apply, undetected-chromedriver, webscraping.
+   - https://github.com/GodsScion/Auto_job_applier_linkedIn
+
+3. wodsuz/EasyApplyJobsBot  [AUTO-APPLY]  Python
+   - Bot that auto-applies to LinkedIn & Glassdoor "Easy Apply" jobs based on
+     preferences. Auto-login, auto-fill additional questions, applies
+     automatically.
+   - https://github.com/wodsuz/EasyApplyJobsBot
+
+4. PaulMcInnis/JobFunnel  [SCRAPER]  Python (ARCHIVED - historical/educational)
+   - Scrapes job boards (Indeed, LinkedIn, Glassdoor) into a single deduped
+     CSV with pipeline for review/apply states. ARCHIVED because job boards
+     now use aggressive anti-bot - author notes re-implementing on
+     Playwright/Selenium is possible but fragile. Still the classic reference.
+   - https://github.com/PaulMcInnis/JobFunnel
+
+--------------------------------------------------------------------------------
+B) JOB DATA / SCRAPING / AGGREGATION
+--------------------------------------------------------------------------------
+5. swx0/linkedin-jobs-scraper  [SCRAPER]  Python
+   - Extracts LinkedIn job openings with Selenium + BeautifulSoup, stores via
+     Google Sheets API.
+   - https://github.com/swx0/linkedin-jobs-scraper
+
+6. luminati-io/LinkedIn-Scraper  [SCRAPER]  Python (Bright Data; no OSS license)
+   - LinkedIn profile/job/company scraper API from Bright Data. Open repo but
+     commercial service behind it - good reference for LinkedIn scraping.
+   - https://github.com/luminati-io/LinkedIn-Scraper
+
+7. Public job APIs (not GitHub, but free/open data sources):
+   - Adzuna API, Jooble API, JSearch (RapidAPI), Jobicy API, Remotive,
+     WWR (We Work Remotely), GitHub Jobs (shut down - use JSearch/Adzuna),
+     USAJobs API (gov). Great for legally scraping job data without fighting
+     LinkedIn.
+   NOTE: job-spy (B0842C0) pip package appears renamed/removed - verify
+   current status before relying on it.
+
+--------------------------------------------------------------------------------
+C) RESUME MATCHING / TAILORING / SCORING (the "Jobright/Jobscan" pieces)
+--------------------------------------------------------------------------------
+8. srbhr/Resume-Matcher  [RESUME/MATCHING]  ~27k stars, Python + TS/React, AGPL-3.0
+   - The #1 open-source AI resume harness. Upload master resume + paste JD ->
+     AI-tailored resume, cover letter, interview prep, match score & keyword
+     highlighting. 100+ LLMs supported (OpenAI, Claude, Gemini, DeepSeek,
+     local via Ollama). Docker deploy. This is the closest open-source
+     equivalent to Jobright/Jobscan's tailoring features.
+   - https://github.com/srbhr/Resume-Matcher
+
+9. santifer/career-ops  [TRACKER/MATCHING/COVER]  ~63k stars, JavaScript, MIT
+   - Open-source AI job search CLI (runs inside Claude Code/Codex/Antigravity
+     etc.): scans job portals, scores listings with a structured A-F rubric
+     (1.0-5.0), tailors your CV, tracks applications. Very active (2026).
+   - https://github.com/santifer/career-ops
+
+10. jananthan30/Resume-Builder  [RESUME/COVER LETTER]  ~70 stars, Python, MIT
+    - AI resume & cover letter generator with dual ATS + HR scoring for any
+      profession; also ships as a Claude Code plugin.
+    - https://github.com/jananthan30/Resume-Builder
+
+--------------------------------------------------------------------------------
+D) RESUME BUILDERS + PARSERS (the "AIApply/resume" pieces)
+--------------------------------------------------------------------------------
+11. xitanggg/open-resume  [BUILDER/PARSER]  ~8.8k stars, TypeScript (React/NextJS), AGPL-3.0
+    - Open-source resume builder + resume parser. ATS-friendly templates
+      (Greenhouse/Lever tested), import from existing PDF, real-time PDF
+      preview, 100% local/privacy-first. Parser algorithm deep-dive included.
+    - https://github.com/xitanggg/open-resume
+
+12. AmruthPillai/Reactive-Resume  [BUILDER]  MIT, TypeScript/React
+    - Popular free & open-source resume builder: templates, drag-drop, PDF/
+      JSON/DOCX export, self-hostable (Docker), AI integration (OpenAI, Gemini,
+      Claude), JSON Resume import. No tracking, privacy-first.
+    - https://github.com/amruthpillai/reactive-resume
+
+13. LingyiChen-AI/JadeAI  [BUILDER]  TypeScript
+    - AI-powered resume builder: 50+ templates, PDF/image parsing, AI
+      optimization, JD match analysis, multi-format export, one-click Docker.
+    - https://github.com/LingyiChen-AI/JadeAI
+
+14. Affinda/resume-parser  [PARSER]  Docker container - COMMERCIAL LICENSE
+    - Self-hosted resume parsing container (OCR + models + skills taxonomy).
+    - IMPORTANT: NOT open source. Free eval allowance (1,000 parses), paid
+      license for production. Included here because it's the de-facto
+      self-hosted parsing option people reach for.
+    - https://github.com/Affinda/resume-parser
+
+--------------------------------------------------------------------------------
+E) APPLICATION TRACKERS (the "Simplify/Teal/Huntr" pieces)
+--------------------------------------------------------------------------------
+15. DaKheera47/job-ops  [TRACKER]  self-hosted
+    - "DevOps principles applied to job hunting": self-hosted pipeline to
+      track, analyze, and assist your application process.
+    - https://github.com/DaKheera47/job-ops
+
+16. Teal / Huntr (NOT open source, listed for reference)
+    - Teal: extension + Kanban tracker + AI resume. Huntr: visual job tracker
+      + AI cover letters. Both freemium SaaS - no OSS equivalent at parity yet;
+      closest OSS trackers are career-ops and job-ops above.
+
+--------------------------------------------------------------------------------
+PART 4 - RECOMMENDED "BUILD YOUR OWN" STACK (all open source)
+--------------------------------------------------------------------------------
+  Component                  | Recommendation
+  ---------------------------+-----------------------------------------------
+  Job data (legal)           | Adzuna / Jooble / JSearch APIs, Remotive, USAJobs
+  Job data (scrape)          | Playwright/Selenium + swx0/linkedin-jobs-scraper
+  Resume parsing             | xitanggg/open-resume parser, or LLM parsing
+                             | (Ollama local) - free & private
+  Resume building            | AmruthPillai/Reactive-Resume or open-resume
+  Tailoring + matching        | srbhr/Resume-Matcher (scoring, keywords, CLs)
+  Cover letters              | srbhr/Resume-Matcher or LLM (Ollama/OpenAI/Claude)
+  Auto-apply (experimental)  | AIHawk / EasyApplyJobsBot (LinkedIn, AGPL - be
+                             | aware of ToS + ban risk)
+  Tracking                   | career-ops (CLI, MIT) or DaKheera47/job-ops
+  Extension autofill         | Build your own content-script extension mapping
+                             | form fields -> profile (Simplify's model)
+
+--------------------------------------------------------------------------------
+PART 5 - KEY TAKEAWAYS
+--------------------------------------------------------------------------------
+1. There is NO single complete open-source "LazyApply" equivalent that also
+   covers Workday/Greenhouse ATS flows, anti-detection, and 30+ boards -
+   the closest is AIHawk (LinkedIn only) + JobFunnel (archived).
+2. BUT every *part* has a solid OSS option: scraping (Playwright/Selenium),
+   parsing (open-resume), matching/tailoring (Resume-Matcher, career-ops),
+   builders (Reactive-Resume), tracking (job-ops).
+3. The commercial moat is NOT AI - it's maintaining ATS-specific form handlers
+   and evading bot detection at scale (LazyApply/LoopCV/FastApply all burn
+   engineering on this).
+4. ToS/legal risk is real: LinkedIn auto-apply bots get accounts banned; the
+   SaaS tools are increasingly pivoting to "pre-fill, user clicks submit"
+   (Simplify's model) which is also the safest OSS architecture.
+5. If you want to build one: use the Resume-Matcher + career-ops + an
+   autofill extension architecture. Avoid storing passwords - piggyback on the
+   user's logged-in session like LoopCV/Simplify do.
+================================================================================
