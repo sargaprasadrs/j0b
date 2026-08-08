@@ -77,8 +77,8 @@ def fetch_jobicy(limit: int = 50) -> list[dict]:
         return jobs
     for j in data.get("jobs", []):
         salary = ""
-        if j.get("salaryMin") or j.get("salaryMax"):
-            salary = f"{j.get('salaryMin')}-{j.get('salaryMax')} {j.get('salaryCurrency','')}"
+        if j.get("salaryMin") is not None or j.get("salaryMax") is not None:
+            salary = f"{j.get('salaryMin') or ''}-{j.get('salaryMax') or ''} {j.get('salaryCurrency','')}".strip("-")
         jobs.append({
             "id": _job_id("jobicy", j.get("url", "")),
             "title": (j.get("jobTitle") or "").strip(),
@@ -88,6 +88,10 @@ def fetch_jobicy(limit: int = 50) -> list[dict]:
             "source": "jobicy",
             "description": _clean(j.get("jobDescription", ""))[:4000],
             "salary": salary.strip(),
+            "salaryMin": j.get("salaryMin"),
+            "salaryMax": j.get("salaryMax"),
+            "salaryCurrency": j.get("salaryCurrency", ""),
+            "salaryPeriod": j.get("salaryPeriod", ""),
             "tags": f"{j.get('jobIndustry','')} | {j.get('jobLevel','')}",
         })
     return jobs
@@ -121,7 +125,11 @@ def fetch_adzuna(cfg: dict, limit: int = 50) -> list[dict]:
             "url": j.get("redirect_url") or "",
             "source": "adzuna",
             "description": _clean(j.get("description", ""))[:4000],
-            "salary": f"{j.get('salary_min')}-{j.get('salary_max')}",
+            "salary": f"{j.get('salary_min') or ''}-{j.get('salary_max') or ''}",
+            "salaryMin": j.get("salary_min"),
+            "salaryMax": j.get("salary_max"),
+            "salaryCurrency": "GBP",
+            "salaryPeriod": "yearly",
             "tags": ", ".join(j.get("category", {}).get("label", "")),
         })
     return jobs

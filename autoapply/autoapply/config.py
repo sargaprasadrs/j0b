@@ -23,3 +23,9 @@ def load_config(path: Path | None = None) -> dict:
         sys.exit(f"config file not found: {cfg_path}  (copy config.yaml)")
     with open(cfg_path, "r", encoding="utf-8") as fh:
         return yaml.safe_load(fh) or {}
+
+
+def save_config(cfg: dict, path: Path | None = None) -> None:
+    cfg_path = Path(path) if path else DEFAULT_CONFIG
+    with open(cfg_path, "w", encoding="utf-8") as fh:
+        yaml.safe_dump(cfg, fh, sort_keys=False, allow_unicode=True)
