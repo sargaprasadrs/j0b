@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>j0b — job searcher + autoapply</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <h1>j0b <span class="logo-dot">.</span></h1>
+      <p class="tagline">job searcher · autoapply · gmail drafts</p>
+      <span class="pill" id="ollama-pill">ollama: ...</span>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ PROFILE ============ -->
+    <section class="card" id="profile-card">
+      <h2>Your profile</h2>
+      <div class="grid two">
+        <label>Name
+          <input id="cand-name" placeholder="Sarga Prasad RS">
+        </label>
+        <label>Email
+          <input id="cand-email" type="email" placeholder="you@gmail.com">
+        </label>
+        <label>Headline
+          <input id="cand-headline" placeholder="Full-stack developer & AI engineer">
+        </label>
+        <label>LinkedIn
+          <input id="cand-linkedin" placeholder="https://linkedin.com/in/...">
+        </label>
+      </div>
+      <label>Summary
+        <textarea id="cand-summary" rows="3" placeholder="1-2 sentences about what you do"></textarea>
+      </label>
+      <label>Skills (comma separated)
+        <input id="cand-skills" placeholder="python, react, fastapi, docker">
+      </label>
+
+      <div class="grid two">
+        <label>Target roles (comma separated)
+          <input id="cand-roles" placeholder="full-stack engineer, ai engineer">
+        </label>
+        <label>Years of experience
+          <input id="cand-years" type="number" min="0" max="50" placeholder="e.g. 4">
+        </label>
+        <label>Desired salary min (annual)
+          <input id="cand-sal-min" type="number" placeholder="e.g. 40">
+        </label>
+        <label>Desired salary max (annual)
+          <input id="cand-sal-max" type="number" placeholder="e.g. 120">
+        </label>
+        <label class="full">Preferred location (comma separated, "remote" = ok)
+          <input id="cand-locations" placeholder="remote, bangalore">
+        </label>
+        <label>Languages (one per line, "english: fluent")
+          <textarea id="cand-languages" rows="2" placeholder="english: fluent&#10;hindi: native"></textarea>
+        </label>
+        <label>Deal-breakers (comma separated, vetoes matching jobs)
+          <input id="cand-dealbreakers" placeholder="on-call, requires relocation">
+        </label>
+        <label class="full">Education (one line, optional)
+          <input id="cand-education" placeholder="B.Tech Computer Science, 2018-2022">
+        </label>
+        <label class="full">STAR examples (one per line: Project (skill): S:.. T:.. A:.. R:..)
+          <textarea id="cand-star" rows="3" placeholder="ai job matcher (python): S:.. T:.. A:.. R:.."></textarea>
+        </label>
+      </div>
+
+      <div class="row">
+        <label class="file-label">
+          Resume (PDF / DOCX / TXT)
+          <input id="resume-file" type="file" accept=".pdf,.docx,.txt,.md">
+          <span id="resume-status" class="hint">no resume uploaded</span>
+        </label>
+        <button class="btn" id="btn-save-profile">Save profile</button>
+      </div>
+      <div class="resume-info" id="resume-info" hidden>
+        <strong>Parsed skills:</strong> <span id="resume-skills"></span>
+      </div>
+    </section>
+
+    <!-- ============ FILTERS ============ -->
+    <section class="card">
+      <h2>Job filters <span class="hint">(role · years of experience · location · salary · startup)</span></h2>
+      <div class="grid three">
+        <label>Role / skills (keywords)
+          <input id="f-keywords" placeholder="python, ai, backend, fullstack">
+        </label>
+        <label>Location (comma separated, optional)
+          <input id="f-locations" placeholder="remote, india">
+        </label>
+        <label>Max jobs to fetch
+          <input id="f-limit" type="number" value="40" min="1" max="200">
+        </label>
+        <label>Experience min (years)
+          <input id="f-exp-min" type="number" min="0" max="50" placeholder="e.g. 2">
+        </label>
+        <label>Experience max (years)
+          <input id="f-exp-max" type="number" min="0" max="50" placeholder="e.g. 8">
+        </label>
+        <label>Salary min (USD/yr)
+          <input id="f-sal-min" type="number" placeholder="e.g. 40000">
+        </label>
+        <label>Salary max (USD/yr)
+          <input id="f-sal-max" type="number" placeholder="e.g. 150000">
+        </label>
+        <div class="check-group">
+          <label class="check"><input id="f-startup" type="checkbox" checked> Startup only</label>
+          <label class="check"><input id="f-remotive" type="checkbox" checked> Remotive</label>
+          <label class="check"><input id="f-jobicy" type="checkbox" checked> Jobicy</label>
+          <label class="check"><input id="f-freehire" type="checkbox" checked> Freehire</label>
+        </div>
+      </div>
+      <div class="row actions">
+        <button class="btn primary" id="btn-search">🔎 Search jobs</button>
+        <button class="btn" id="btn-match" disabled>📊 Score vs resume</button>
+        <button class="btn ghost" id="btn-reset">Reset</button>
+      </div>
+      <p class="hint" id="search-status"></p>
+    </section>
+
+    <!-- ============ RESULTS ============ -->
+    <section class="card" id="results-card" hidden>
+      <div class="row between">
+        <h2>Results <span class="count" id="result-count"></span></h2>
+        <div class="row">
+          <label class="check"><input id="f-startup-only-view" type="checkbox" checked> startups only</label>
+          <label class="check"><input id="f-scored" type="checkbox"> scored only</label>
+        </div>
+      </div>
+      <div id="job-list" class="job-list"></div>
+    </section>
+
+    <!-- ============ COLD EMAIL -> GMAIL ============ -->
+    <section class="card" id="email-card" hidden>
+      <div class="row between">
+        <h2>✉ Cold email → Gmail draft <span class="hint">(drafts only — you review &amp; send)</span></h2>
+        <button class="btn ghost" id="btn-gmail-login">🔑 Login to Gmail (once)</button>
+      </div>
+      <p class="hint" id="email-job-line"></p>
+      <div class="grid two">
+        <label>To
+          <input id="email-to" placeholder="recruiter@company.com">
+        </label>
+        <label>Subject
+          <input id="email-subject">
+        </label>
+        <label class="full">Body
+          <textarea id="email-body" rows="7"></textarea>
+        </label>
+      </div>
+      <div class="row actions">
+        <button class="btn primary" id="btn-email-draft-browser">📤 Create Gmail draft (browser)</button>
+        <button class="btn" id="btn-email-draft-composio">Create draft (Composio)</button>
+        <span class="hint" id="email-draft-status"></span>
+      </div>
+      <p class="hint">Fast template body — edit it freely (AI agent → "Cold outreach" writes a personalized one). First click "Login to Gmail (once)" so drafts can be saved to your inbox; nothing is ever sent automatically.</p>
+    </section>
+
+    <!-- ============ TRACKER ============ -->
+    <section class="card" id="tracker-card" hidden>
+      <div class="row between">
+        <h2>Application tracker</h2>
+        <button class="btn ghost" id="btn-report">📈 Generate HTML report</button>
+      </div>
+      <div id="tracker-list" class="tracker-list"></div>
+    </section>
+
+    <!-- ============ AI AGENT ============ -->
+    <section class="card" id="agent-card">
+      <div class="row between">
+        <h2>AI agent <span class="count" id="agent-pill" class="pill"></span></h2>
+        <div class="row">
+          <button class="btn ghost" id="btn-agent-refresh">refresh</button>
+          <button class="btn ghost" id="btn-agent-connect">connect Gmail</button>
+        </div>
+      </div>
+      <p class="hint" id="agent-status-line">checking backend…</p>
+
+      <label>Job context
+        <select id="agent-job">
+          <option value="">(no job context)</option>
+        </select>
+      </label>
+
+      <div class="agent-log" id="agent-log"></div>
+      <textarea id="agent-input" rows="3"
+        placeholder="e.g. Summarize this job and rate my fit, then draft a follow-up email"></textarea>
+      <div class="row actions">
+        <button class="btn primary" id="btn-agent-send">Send to agent</button>
+        <button class="btn ghost" data-compose="followup">Draft follow-up</button>
+        <button class="btn ghost" data-compose="cold">Cold outreach</button>
+        <button class="btn ghost" data-compose="cover">Cover letter</button>
+        <button class="btn ghost" id="btn-interview-prep">🎤 Interview prep</button>
+        <button class="btn ghost" id="btn-interview-mock">Mock interview</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ TAILOR MODAL ============ -->
+  <div class="modal-backdrop" id="tailor-modal" hidden>
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="tailor-title">Tailored docs</h3>
+        <button class="btn ghost" id="btn-close-modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="row between">
+          <label class="check"><input id="tailor-template" type="checkbox"> fast template (no AI)</label>
+          <button class="btn primary" id="btn-generate">Generate docs</button>
+        </div>
+        <h4>Cover letter</h4>
+        <pre id="tailor-cover"></pre>
+        <h4>Resume summary</h4>
+        <pre id="tailor-summary"></pre>
+        <p class="hint" id="tailor-file"></p>
+        <div class="row actions">
+          <button class="btn" id="btn-cv-pdf">📄 Generate CV PDF (LaTeX)</button>
+          <span class="hint" id="cv-status"></span>
+        </div>
+        <div class="row actions">
+          <button class="btn" id="btn-open-job">Open application page</button>
+          <span class="spacer"></span>
+          <button class="btn" data-log="applied">✅ Applied</button>
+          <button class="btn" data-log="interview">🎤 Interview</button>
+          <button class="btn ghost" data-log="offer">💌 Offer</button>
+          <button class="btn ghost" data-log="hired">🎉 Hired</button>
+          <button class="btn ghost" data-log="skipped">⏭ Skipped</button>
+          <button class="btn ghost" data-log="rejected">✖ Rejected</button>
+          <button class="btn ghost" data-log="no_response">📭 No reply</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

@@ -256,6 +256,12 @@ def fetch_all(cfg: dict) -> list[dict]:
         seen[key] = job
 
     jobs = list(seen.values())
+    # years-of-experience filter (search.exp_min / search.exp_max); also
+    # attaches exp_range + exp_display to every job for the UI
+    from .filters import filter_by_exp
+    jobs = filter_by_exp(jobs, cfg.get("search", {}).get("exp_min"),
+                         cfg.get("search", {}).get("exp_max"))
+
     with open(JOBS_FILE, "w", encoding="utf-8") as fh:
         json.dump(jobs, fh, indent=2, ensure_ascii=False)
     print(f"[jobs] {len(raw)} raw -> {len(jobs)} matched+deduped -> {JOBS_FILE}")

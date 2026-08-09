@@ -1,0 +1,147 @@
+candidate:
+  name: Sarga Prasad RS
+  email: sargaprasadrs@gmail.com
+  phone: ''
+  headline: Full-stack developer & AI engineer
+  summary: 'I build web apps and AI/LLM tooling end to end (Python, TypeScript,
+
+    React, FastAPI). I have shipped side projects and worked on
+
+    production codebases; I like to be part of productive teams where I can contribute
+    and grow.'
+  skills:
+  - python
+  - typescript
+  - react
+  - node
+  - fastapi
+  - postgres
+  - docker
+  - llms
+  - playwright
+  - selenium
+  - scraping
+  roles:
+  - full-stack engineer
+  - ai engineer
+  years_of_exp: null
+  desired_salary_min: 60000
+  desired_salary_max: null
+  preferred_locations:
+  - remote
+  - bangalore
+  - kochi
+  - kerala
+  languages:
+  - 'english: fluent'
+  - 'Malayalam: native'
+  - Hindi:fluent
+  - Tamil:talk
+  deal_breakers:
+  - on-call
+  - requires relocation
+  star_examples:
+  - 'ai resume matcher (python): S: team needed to prioritize hundreds of jobs; T:
+    I owned the matcher module; A: built a keyword+profile scoring pipeline with caching;
+    R: cut review time, shipped in production'
+  - 'full-stack web app (react/fastapi): S: slow internal tooling; T: I built the
+    app end to end; A: react frontend + fastapi backend + docker; R: teammates adopted
+    it daily'
+  education: B.tech INFORMATION TECHNOLOGY, 2026
+  resume_path: C:\Users\LOQ\Desktop\j0b\autoapply\data\resume.pdf
+  linkedin: https://www.linkedin.com/in/sargaprasadrs/
+search:
+  keywords:
+  - python
+  limit: 10
+  locations: []
+  exp_min: null
+  exp_max: 10
+sources:
+  remotive:
+    enabled: true
+  jobicy:
+    enabled: true
+  freehire:
+    enabled: true
+    base_url: https://freehire.me
+    regions: []
+    countries: []
+    cities: []
+    seniority: []
+    category: []
+    skills: []
+    work_mode: ''
+    jobage: 30
+  adzuna:
+    enabled: false
+    app_id: ''
+    app_key: ''
+    country: gb
+match:
+  mode: keywords
+  min_score: 30
+ollama:
+  base_url: http://localhost:11434
+  model: deepseek-r1:8b
+  use_ai: true
+agent:
+  opencode:
+    enabled: true
+    base_url: http://127.0.0.1:4096
+    bin: opencode
+  composio:
+    enabled: true
+    api_key: ''
+    apps:
+    - gmail
+  fallback:
+    base_url: http://localhost:11434
+    model: deepseek-r1:8b
+apply:
+  page_timeout: 45
+sender:
+  name: Sarga Prasad RS
+  email: sargaprasadrs@gmail.com
+  phone: ''
+  headline: Full-stack developer & AI engineer
+  summary: 'I build web apps and AI/LLM tooling end to end (Python, TypeScript,
+
+    React, FastAPI). I have shipped side projects and worked on
+
+    production codebases; I like small teams where I can own things.
+
+    '
+  skills:
+  - python
+  - typescript
+  - react
+  - node
+  - fastapi
+  - postgres
+  - docker
+  - llms
+  - playwright
+  - selenium
+  - scraping
+  resume_path: ''
+outreach:
+  tone: polite and frank
+  greeting: Hi
+  max_drafts: 10
+  ask: 'I''d genuinely like to help here. If there''s a role or an open
+
+    problem I could take a look at, I''d appreciate 10 minutes of your
+
+    time. Either way, thank you for reading this.
+
+    '
+  signoff: 'Thanks,
+
+    {sender_name}'
+discovery:
+  sources:
+  - jobicy
+  - remotive
+  max_companies: 20
+  keywords: []

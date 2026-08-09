@@ -113,8 +113,8 @@ def draft_emails(emails: list[dict], dry_run: bool = False,
         page.goto(GMAIL)
         if not _wait_for_logged_in(page, timeout_s=120):
             print("[gmail] NOT logged in - run `python cli.py gmail login` first.")
-            browser.close()
-            return
+            context.close()
+            return []
         print("[gmail] logged in.\n")
 
         for em in emails:

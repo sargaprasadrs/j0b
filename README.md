@@ -1,180 +1,104 @@
-# j0b — job hunting toolkit
+# j0b — job searcher + autoapply (single program)
 
-A private toolkit for job hunting, built from the research in `jobfree.txt`
-(how LazyApply, LoopCV, Jobright, Simplify, FastApply, AIApply work + their
-open-source alternatives).
+One local web app that merges the three tools that used to live in
+`autoapply/`, `coldmail/` and `webui/` into a single program:
 
-Two tools:
+| Capability | What it does | Safety model |
+|------------|--------------|--------------|
+| **Job search** | Fetches jobs from free/legal APIs (Remotive, Jobicy, freehire.me, optional Adzuna) | Read-only |
+| **Flexible filters** | **Role / keywords**, **years of experience (min–max)**, **location**, **salary (min–max)**, startup-only, per-source toggles | — |
+| **Matching** | Scores jobs vs your resume + profile (experience / location / salary fit, language gate, deal-breakers, 5-dimension rubric) | Offline |
+| **Gmail autoapply** | Generates a polite cold application email for a matched job and saves it as a **Gmail DRAFT** in a real browser session | **Drafts only — never sends.** You review & hit send |
+| **Browser apply** | Opens the job page pre-filled from your profile so you review and submit yourself | Semi-auto — never clicks submit |
+| **Tailoring / CV** | Per-job cover letter + resume summary (Ollama or template), optional LaTeX CV + cover PDFs | — |
+| **AI agent** | opencode brain + Composio tools: summarize/score jobs, interview prep, mock interview, Gmail draft | Drafts only |
+| **Tracker** | Logs every application/draft; self-contained HTML dashboard + funnel stats | Local CSV |
 
-| Tool | What it does | Safety model |
-|------|--------------|--------------|
-| `coldmail/` | Finds startups hiring, resolves contact emails, writes polite + frank cold-application emails, and saves them as **Gmail drafts only** (never sends). | Drafts only — zero send paths. Uses your own Gmail via a persistent browser session. |
-| `autoapply/` | Fetches jobs from legal APIs (Remotive/Jobicy/freehire.me, optional Adzuna), scores them against your resume with a structured fit framework (language gate, deal-breakers, 5-dimension rubric), generates tailored cover letters (Ollama) + optional **LaTeX CV/cover PDFs**, and opens application forms **pre-filled for you to review and submit**. | Semi-auto — the tool NEVER clicks submit. ToS-safe, no LinkedIn scraping. |
-| `webui/` | Small local web app on top of autoapply: upload your resume, set preferred roles / location / salary range / startup-only, run searches, score matches, tailor docs, track applications. | Runs locally (http://127.0.0.1:5000). Everything below the hood is the same safe autoapply pipeline. |
-
-The web UI also ships an **AI agent backend** (`webui/agent_backend.py`)
-built on **opencode** (the agent brain, driven over its HTTP server API) +
-**Composio** (authenticated tools like Gmail). The agent can summarize/score
-jobs, write tailored follow-ups and cold outreach, and create a **Gmail draft
-via Composio — it never sends**. When opencode is unreachable it falls back to
-your local Ollama model (no tools).
-
-Your candidate profile can hold **target roles, years of experience, desired
-salary range, preferred locations, languages, deal-breakers, STAR examples and
-education** (plus name/headline/summary/skills). These feed the match score
-(experience / location / salary fit), the AI agent's context, and tailored
-cover letters.
-
-Several pieces are **ported from [ai-job-search](https://github.com/MadsLorentzen/ai-job-search)**
-(the Claude Code job-hunting framework that got its author hired):
-
-- **freehire.me job source** — a multi-market, tech-focused job aggregator
-  (public JSON API, no API key) alongside Remotive/Jobicy. ~50 ATS platforms,
-  structured skills/salary data, facet filters (region/country/seniority/
-  category/work_mode). See `autoapply/config.yaml` → `sources.freehire`.
-- **Fit evaluation framework** (`autoapply/autoapply/fit.py`) — port of the
-  repo's `04-job-evaluation.md`: a **language gate** (hard-fails postings that
-  require a language you don't declare, flags bars above your level), free-form
-  **deal-breakers** that veto a posting (e.g. "on-call"), and structured
-  Technical / Experience / Location / Career-Alignment dimensions with the
-  reference verdict thresholds (Strong 75+ … Poor <30). Vetoed jobs land in
-  `data/vetoed.json` with the exact reason.
-- **Interview prep** — the AI agent builds a **prep pack** (likely questions,
-  STAR answer sketches from your `star_examples`, questions to ask, honest
-  gaps) or runs a **mock interview** (roleplay protocol from the repo's
-  `07-interview-prep.md`).
-- **HTML tracker report** (`autoapply/autoapply/report.py`) — port of the
-  repo's `/html-report`: one self-contained offline dashboard (stat cards,
-  inline-SVG charts, filterable table) from `data/applied.csv`. Run
-  `python cli.py report --open` or the button in the web UI tracker.
-- **LaTeX CV + cover letter** (`autoapply/autoapply/cv.py`) — moderncv banking
-  style, ported from the repo's templates. Compiles with lualatex (fallback
-  xelatex/pdflatex), verifies page counts with pypdf (CV ≤ 2 pages, cover 1
-  page). No LaTeX installed? It still writes the `.tex` sources and tells you
-  what to install.
-
-## Requirements
-- Python 3.11+
-- `pip install -r <tool>/requirements.txt`
-- `python -m playwright install chromium` (for browser features)
-- Optional: Ollama running locally (`ollama serve`) for AI-generated emails/cover letters
+The three folders remain as **internal libraries** under the hood — the whole
+program is driven from the project root.
 
 ## Quick start
 
-### Web UI (easiest — resume upload + filters + results)
 ```bash
-cd webui
 pip install -r requirements.txt
-python app.py
-# open http://127.0.0.1:5000
-# 1) upload your resume (PDF/DOCX/TXT) - skills are auto-detected
-# 2) fill profile + filters: roles, location, salary min/max, startup-only
-# 3) Search jobs -> Score vs resume -> Tailor -> open page & apply yourself
+python -m playwright install chromium     # for Gmail drafts + browser apply
+python app.py                              # -> http://127.0.0.1:5000
 ```
 
-### AI agent panel (opencode + Composio)
-The "AI agent" card at the bottom of the web UI talks to an opencode server
-(HTTP API, default `http://127.0.0.1:4096`). If none is running, `opencode
-serve` is started automatically for you.
+Then, in the web app:
+
+1. **Profile** — fill name/email/roles/years/salary/locations, upload your
+   resume (skills are auto-detected).
+2. **Filters** — set role keywords, **experience min/max**, location, salary
+   min/max, startup-only, sources → **Search jobs**.
+3. **Score vs resume** — rank the results, then per job:
+   - **✉ Cold email** → generates an application email (and a best-effort
+     recipient) → click **Login to Gmail (once)** the first time, then
+     **Create Gmail draft (browser)**. Review the draft in Gmail and send it
+     yourself. Drafts only — nothing is sent automatically.
+   - **💻 Apply** → opens the job page pre-filled from your profile; you
+     review and submit yourself.
+   - **✍ Tailor** → cover letter + resume summary (and LaTeX CV PDFs if you
+     have TeX installed).
+4. Log outcomes (applied / interview / offer / hired / skipped / rejected)
+   and generate the **HTML tracker report**.
+
+### Gmail drafts (cold-application emails)
+
+- First time: click **🔑 Login to Gmail (once)** — a browser opens, you log
+  in once, and the session persists (`coldmail/data/browser_profile`).
+- **Drafts only**: the tool creates drafts, never sends. Always review in
+  Gmail before hitting Send yourself.
+
+### AI agent panel
+
+The agent talks to an opencode server (HTTP API, default
+`http://127.0.0.1:4096`; started automatically if missing). It can also
+create a Gmail draft via **Composio**:
 
 ```bash
-# opencode must be installed and logged in to a model provider (as usual)
-opencode login
-```
-
-Composio enables the agent's only outbound action — a **Gmail draft**:
-```bash
-pip install composio            # already in webui/requirements.txt
-composio add gmail              # one-time OAuth connect (or click "connect Gmail" in the UI)
+pip install composio
+composio add gmail              # one-time OAuth connect (or the UI button)
 export COMPOSIO_API_KEY=your_key
 ```
 
-Without a Composio key the agent still works for analysis and email writing
-(read-only, falls back to Ollama if opencode is down). With a key, "Create
-Gmail draft" saves a draft to your inbox for you to review and send —
-matching j0b's drafts-only safety model.
+Without Composio the agent still works for analysis + email writing
+(falls back to your local Ollama model).
 
-### coldmail (drafts only)
-```bash
-cd coldmail
-python cli.py discover --keywords "python, ai" --max-companies 20
-python cli.py resolve
-python cli.py drafts --dry-run --no-ai     # preview locally
-python cli.py gmail login                  # log in once (session persists)
-python cli.py gmail draft --limit 10       # -> Gmail Drafts, never sends
-```
+## Configuration
 
-### autoapply (semi-auto)
-```bash
-cd autoapply
-python cli.py search --keywords "python, developer, software" --limit 40
-python cli.py match
-python cli.py tailor --top 10
-python cli.py apply --job-id 3 --dry-run   # preview
-python cli.py apply --job-id 3             # browser opens pre-filled, YOU submit
-python cli.py cv --job-id 3                # LaTeX CV + cover letter PDFs (needs LaTeX)
-python cli.py report --open                # HTML application-tracker dashboard
-python cli.py status
-```
+Everything lives in **one file**: `config.yaml` at the project root.
 
-## How to run the two CLI tools (if you prefer terminal)
-
-### coldmail (drafts only)
-```bash
-cd coldmail
-pip install -r requirements.txt
-python -m playwright install chromium
-python cli.py discover --keywords "python, ai" --max-companies 20  # find startups hiring
-python cli.py resolve                                            # find contact emails
-python cli.py drafts --dry-run --no-ai                           # preview locally
-python cli.py gmail login                                        # log in once (persists)
-python cli.py gmail draft --limit 10                             # -> Gmail Drafts, never sends
-```
-
-### autoapply (semi-auto)
-```bash
-cd autoapply
-pip install -r requirements.txt
-python -m playwright install chromium
-python cli.py search --keywords "python, developer, software" --limit 40
-python cli.py match
-python cli.py tailor --top 10
-python cli.py apply --job-id 3 --dry-run   # preview
-python cli.py apply --job-id 3             # browser opens pre-filled, YOU submit
-python cli.py status
-```
-
-The web UI (`webui/`) drives the same autoapply pipeline with a nicer interface — use whichever you prefer.
+- `candidate` — your profile (name, roles, years of experience, salary
+  range, locations, languages, deal-breakers, STAR examples…)
+- `search` — `keywords`, `locations`, `limit`, `exp_min`, `exp_max`
+- `sources` — enable/disable Remotive / Jobicy / freehire (facets) / Adzuna
+- `sender` + `outreach` — who the cold emails come from and the ask/signoff
+- `ollama`, `agent`, `apply` — local LLM, agent backend, browser timeouts
 
 ## Security notes
-- `coldmail/data/browser_profile/` contains your **real Gmail login session**.
-  It is git-ignored. Never commit, zip, or share it.
-- Neither tool sends email or submits applications on its own. Review
-  everything before you hit Send / Submit.
-- Resolved contact emails marked `[GUESS]` are pattern guesses — verify them.
+
+- `coldmail/data/browser_profile/` contains your **real Gmail login
+  session** — it is git-ignored. Never commit, zip, or share it.
+- The tool never sends email and never submits applications on its own.
+- Recipients flagged as "guessed" (`hello@domain`) are pattern guesses —
+  verify them before sending.
 
 ## Tests
+
 ```bash
-# autoapply pre-fill logic (offline, uses local demo form)
-cd autoapply && python tests/test_prefill.py
-
-# web UI smoke + flow tests (server must be running on :5000)
-cd webui && python tests/test_ui.py && python tests/test_flow.py
-
-# fit framework, HTML report, LaTeX sources (all offline)
+# offline: exp filter, fit framework, report, LaTeX sources, agent backend
+python tests/test_filters.py
 cd autoapply && python tests/test_fit.py && python tests/test_report.py && python tests/test_cv.py
-
-# agent backend unit tests (offline — stubs opencode/composio, no server needed)
 cd webui && python tests/test_agent.py
+
+# browser smoke tests (server must be running on :5000)
+python tests/test_ui.py
 ```
 
-## LaTeX CV (optional)
-Install a TeX distribution (TeX Live, MiKTeX, or TinyTeX) so `lualatex` is on
-your PATH. Then `python cli.py cv --job-id 3` compiles a tailored CV + cover
-letter into `autoapply/data/cv/<company>-<role>/` and verifies the page counts.
-The cover letter reuses the tailored letter you generated (cache), and the CV
-content is written from your profile + resume only — never fabricated.
-
 ## Research
-`jobfree.txt` — deep dive on how the commercial auto-apply tools work and
-the open-source components you can build with.
+
+`jobfree.txt` — deep dive on how the commercial auto-apply tools
+(LazyApply, LoopCV, Jobright, Simplify, FastApply, AIApply) work and the
+open-source components they are built from. `job.txt` — a sample of 100
+startup jobs (Cutshort, India) for testing the filters.
