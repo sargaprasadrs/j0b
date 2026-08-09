@@ -1,0 +1,492 @@
+# 100 Startup Jobs in India — Full-Stack / Software Engineer
+# Source: Cutshort (cutshort.io) · Generated: 2026-08-08
+# Includes remote roles. Live listings — verify each before applying.
+
+  1. Senior Product Engineer - Mobile Developer (L3) — Fountane inc — Remote — ₹10L-₹30L — 5-8 yrs
+      Bootstrapped · 20-100 · Services
+      https://cutshort.io/job/Senior-Product-Engineer-Mobile-Developer-L3-Fountane-inc-oyJaddR8
+      Skills: React Native, Fullstack Developer, NodeJS (Node.js), React.js, MongoDB, PostgreSQL
+
+  2. AI/ML Engineer — The supreme consultancy — Remote — ₹22L-₹45L — 7-9 yrs
+      Bootstrapped · 20-100 · Services
+      https://cutshort.io/job/AI-ML-Engineer-The-supreme-consultancy-TiYEp4gm
+      Skills: Fullstack Developer, Python, React.js, Javascript, TypeScript, Vector database
+
+  3. AI Full Stack Developer — Risosu Consulting LLP — Remote — ₹14L — 4-7 yrs
+      Bootstrapped · 20-100 · Services
+      https://cutshort.io/job/AI-Full-Stack-Developer-Risosu-Consulting-LLP-r1NZHzYq
+      Skills: Artificial Intelligence (AI), Machine Learning (ML), Fullstack Developer, Large Language Models (LLM) tuning, API
+
+  4. MERN Fullstack Developer — FreeADS — Remote — ₹3L — 10 yrs
+      Bootstrapped · 0-20 · Products & Services
+      https://cutshort.io/job/MERN-Fullstack-Developer-FreeADS-pI5LMn0E
+      Skills: Fullstack Developer
+
+  5. Senior Software Engineer (Python — Talent Pro  — Remote — ₹15L-₹40L — 6-10 yrs
+      Bootstrapped · Services
+      https://cutshort.io/job/Senior-Software-Engineer-Python-Talent-Pro--aiwz7SmS
+      Skills: Python, Software engineering, Top tier 1 college only , IIT, NIT, BITS
+
+  6. Database Engineering Intern — MindBridge — Remote — ₹2.4L — 2 yrs
+      Bootstrapped · 0-20 · Product
+      https://cutshort.io/job/Database-Engineering-Intern-MindBridge-C5Aq8sMq
+      Skills: SQL, Supabase, RLS, Authentication, Authorization, PostgreSQL
+
+  7. Senior Node.js Backend Engineer — Shuling technology — Remote — ₹10L-₹30L — 3-8 yrs
+      Bootstrapped · 0-20 · Products & Services
+      https://cutshort.io/job/Senior-Node-js-Backend-Engineer-Shuling-technology-JNkjU1hc
+      Skills: NodeJS (Node.js)
+
+  8. SDE Internship (Next Js) — PGAGI — Remote — ₹3L — 0.6 yrs
+      Bootstrapped · 0-20 · Products & Services
+      https://cutshort.io/job/SDE-Internship-Next-Js-PGAGI-y4NMladl
+      Skills: NextJs (Next.js), React.js, HTML/CSS, scss, Redux/Flux, Git
+
+  9. SDE Intern - React Native — PGAGI — Remote — ₹3L — 0.6-1 yrs
+      Bootstrapped · 0-20 · Products & Services
+      https://cutshort.io/job/SDE-Intern-React-Native-PGAGI-2ARnMb5d
+      Skills: React Native, React.js, RESTful APIs, JSON
+
+ 10. Lead Frontend Engineer/Architect — Shorthills AI — Remote — ₹12.5L-₹45L — 7-15 yrs
+      Bootstrapped · 100-1000 · Services
+      https://cutshort.io/job/Lead-Frontend-Engineer-Architect-Shorthills-AI-fJLgaR9E
+      Skills: AngularJS (1.x), TypeScript, Javascript, HTML/CSS, Artificial Intelligence (AI), Anthropic Claude
+
+ 11. JAVA DEVELOPER — Staffnixcom — Remote — ₹11L-₹25L — 3-6 yrs
+      Bootstrapped · 0-20 · Services
+      https://cutshort.io/job/JAVA-DEVELOPER-Staffnixcom-WKkUW9yn
+      Skills: Java
+
+ 12. Software Developer (Python, React/Vue)Tier 1 college only — Talent Pro  — Remote — ₹21L-₹37L — 2-4 yrs
+      Bootstrapped · Services
+      https://cutshort.io/job/Software-Developer-Python-React-Vue-Tier-1-college-only-Talent-Pro--NwBmxDAF
+      Skills: Python, Vue.js
+
+ 13. Frontend Developer(NextJs) — Appiness Interactive Pvt. Ltd. — Remote — ₹5L-₹15L — 7-10 yrs
+      Bootstrapped · 100-1000 · Services
+      https://cutshort.io/job/Frontend-Developer-NextJs-Appiness-Interactive-MzaKs1wP
+      Skills: NextJs (Next.js), React.js, Javascript, HTML/CSS
+
+ 14. Frontend Developer - Intern — Synorus — Remote — ₹0.36L-₹0.6L — 3 yrs
+      Bootstrapped · 0-20 · Products & Services
+      https://cutshort.io/job/Frontend-Developer-Intern-Synorus-HOKGKRBj
+      Skills: tailwindcss, HTML/CSS, NextJs (Next.js), React.js, MongoDB, Figma
+
+ 15. Next.js Developer - Intern — Synorus — Remote — ₹0.6L — 3 yrs
+      Bootstrapped · 0-20 · Products & Services
+      https://cutshort.io/job/Next-js-Developer-Intern-Synorus-eGoyxwc9
+      Skills: Remotion, NextJs (Next.js), React.js, HTML/CSS, TypeScript, MongoDB
+
+ 16. Frontend Developer — Digibility Solutions Pvt. Ltd. — Remote — ₹2L — 1 yrs
+      Bootstrapped · 0-20 · Product
+      https://cutshort.io/job/Frontend-Developer-Digibility-Solutions-Pvt-Ltd--EEw3jiFf
+      Skills: React.js, NextJs (Next.js), tailwindcss, HTML/CSS, Javascript, RESTful APIs
+
+ 17. Salesforce B2C Commerce Developer — Deqode — Remote — ₹12L — 2.5-7 yrs
+      Bootstrapped · 100-1000 · Products & Services
+      https://cutshort.io/job/Salesforce-B2C-Commerce-Developer-Deqode-MiJhmHDj
+      Skills: Salesforce, SFRA, Progressive Web Apps (PWA), React.js, Javascript, NodeJS (Node.js)
+
+ 18. React Developer - Remote (Part time) — OpenWifi Labs Pvt Ltd — Remote — ₹2L-₹5L — 1-3 yrs
+      Bootstrapped · 0-20 · Product
+      https://cutshort.io/job/React-Developer-Remote-Part-time-OpenWifi-Labs-Pvt-Ltd-p3txJQM3
+      Skills: React.js, NextJs (Next.js), tailwindcss, chakraui
+
+ 19. Guidewire Developer — Hasteee Technologies — Remote — ₹12L — 5-10 yrs
+      Bootstrapped · Services
+      https://cutshort.io/job/Guidewire-Developer-Hasteee-Technologies-IWMdSJ4s
+      Skills: Guidewire
+
+ 20. Flutter developer — Flipzon — Remote — ₹3L — 5 yrs
+      Bootstrapped · 20-100 · Products & Services
+      https://cutshort.io/job/Flutter-developer-Flipzon-t4BnY5YQ
+      Skills: Flutter, Mobile App Development, Mobile App Design, Deployment management, User Experience (UX) Design, User Interface (UI) Design
+
+ 21. Software Developer — Automate Accounts — Remote — ₹15L — 2-6 yrs
+      Bootstrapped · 0-20 · Services
+      https://cutshort.io/job/Software-Developer-Automate-Accounts-if85CIo4
+      Skills: Python, NodeJS (Node.js), Debugging, RESTful APIs, zoho, Workforce management
+
+ 22. Developer Intern — Mojo Web Technology <> Zapify Pro — Remote — ₹2L — 1-5 yrs
+      Bootstrapped · 20-100 · Product
+      https://cutshort.io/job/Developer-Intern-Mojo-Web-Technology-Zapify-Pro-icOeTEsy
+      Skills: Web Development, PHP, Javascript, MetaSwitch
+
+ 23. Developer Intern — Zenawn — Remote — ₹0.12L-₹0.6L — 1 yrs
+      Bootstrapped · 0-20 · Products & Services
+      https://cutshort.io/job/Developer-Intern-Zenawn-Qag1yB3N
+      Skills: Web Development, Mobile App Development, Artificial Intelligence (AI)
+
+ 24. App developer for Full Taxi App and Full IPTV Development — Cueride — Remote — 85470 USD-512821 USD — 3-15 yrs
+      Bootstrapped · 0-20 · Services
+      https://cutshort.io/job/App-developer-for-Full-Taxi-App-and-Full-IPTV-Development-Cueride-sdBfbTR3
+      Skills: Mobile App Development, IPTV, Mobile App Marketing, Mobile App Design, Web Development, Web API
+
+ 25. Frontend Developer — Vector Labs Tech — Remote — ₹5L-₹20L — 50 yrs
+      Bootstrapped · 0-20 · Services
+      https://cutshort.io/job/Frontend-Developer-Vector-Labs-Tech-Cd15QETe
+      Skills: Web Development
+
+ 26. Wordpress Developer — World Vision Softek — Remote — ₹6L — 3-5 yrs
+      Bootstrapped · 0-20 · Products & Services
+      https://cutshort.io/job/Wordpress-Developer-World-Vision-Softek-6hXTo2Xk
+      Skills: Wordpress, HTML/CSS, Javascript, PHP, WooCommerce, Shopify
+
+ 27. Project Manager - Full Stack — Ganit Business Solutions — Remote — ₹5L-₹30L — 5-12 yrs
+      Bootstrapped · 100-1000 · Services
+      https://cutshort.io/job/Project-Manager-Full-Stack-Ganit-Business-Solutions-lrPP4OQW
+      Skills: Vue.js, AngularJS (1.x), Angular (2+), React.js, Javascript, Python
+
+ 28. Software Development Engineer (Associate/Intern) — Alpha — Remote — ₹10L — 1-5 yrs
+      Bootstrapped · 0-20 · Products & Services
+      https://cutshort.io/job/Software-Development-Engineer-Associate-Intern-Alpha-28uXEWNi
+      Skills: Javascript, PostgreSQL, Docker, Amazon Web Services (AWS), TypeScript, React.js
+
+ 29. Full Stack Developer(PHP& Codeigniter/Laravel) — Mayura Consultancy Services — Remote — ₹2L-₹5L — 1-3 yrs
+      Bootstrapped · 20-100 · Services
+      https://cutshort.io/job/Full-Stack-Developer-PHP-Codeigniter-Laravel-Mayura-Consultancy-Services-hDCbuMfJ
+      Skills: PHP, CodeIgniter, Laravel, SQL, Bootstrap, Javascript
+
+ 30. AI Applied Engineer — Bigmantra — Remote — ₹15L-₹50L — 3-10 yrs
+      Bootstrapped · 0-20 · Products & Services
+      https://cutshort.io/job/AI-Applied-Engineer-Bigmantra-ODLNLFS6
+      Skills: Javascript, Python, Generative AI, Artificial Intelligence (AI), LangGraph, Anthropic Claude
+
+ 31. Senior AI-Powered Quality Assurance Engineer — ParvixCloud — Remote — ₹9L — 5-8 yrs
+      Bootstrapped · Products & Services
+      https://cutshort.io/job/Senior-AI-Powered-Quality-Assurance-Engineer-ParvixCloud-lSdT5zeH
+      Skills: Selenium, Appium, cypress, Python, Java, Javascript
+
+ 32. lead nodejs Developer — Maventic Innovative Solutions — Remote — ₹7.5L-₹20L — 9-19 yrs
+      Bootstrapped · Products & Services
+      https://cutshort.io/job/lead-nodejs-Developer-Maventic-Innovative-Solutions-8e4JOcbU
+      Skills: node, Amazon Web Services (AWS), TypeScript, Javascript, API, Cloud Computing
+
+ 33. Web Developer — BluePMS Software Solutions Pvt Ltd — Remote — ₹7L — 3 yrs
+      Bootstrapped · 20-100 · Products & Services
+      https://cutshort.io/job/Web-Developer-BluePMS-Software-Solutions-Pvt-Ltd-Hzck1KMW
+      Skills: HTML/CSS, Javascript, React.js, NextJs (Next.js), NodeJS (Node.js), API
+
+ 34. Full Stack Developer — The Red Arc — Remote — ₹5L-₹30L — 3 yrs
+      Bootstrapped · 20-100 · Products & Services
+      https://cutshort.io/job/Full-Stack-Developer-The-Red-Arc-i7sR4qs6
+      Skills: HTML/CSS, Javascript, AngularJS (1.x), React.js, NodeJS (Node.js), MySQL
+
+ 35. AI Implementation Engineer & Strategist — Outpilot AI — Remote — ₹12L — 1-6 yrs
+      Bootstrapped · 0-20 · Products & Services
+      https://cutshort.io/job/AI-Implementation-Engineer-Strategist-Outpilot-AI-nbG8lg3G
+      Skills: n8n, airtable, claude code, codex, clay, apollo
+
+ 36. Full Stack Developer — HookUX — Remote — ₹12L — 3 yrs
+      Bootstrapped · 0-20 · Services
+      https://cutshort.io/job/Full-Stack-Developer-HookUX-NQSnCEAO
+      Skills: Vue.js, React.js, Javascript, Java, MongoDB, HTML/CSS
+
+ 37. Software Engineer II (Java Fullstack) — Upland Software — Remote — ₹12.5L-₹27L — 5-10 yrs
+      Profitable · 1000-5000 · Product
+      https://cutshort.io/job/Software-Engineer-II-Java-Fullstack-Upland-Software-K1B7uBad
+      Skills: Java, React.js, Angular (2+), Fullstack Developer, Javascript
+
+ 38. Backend Fullstack — CareValidate — Remote — ₹5L-₹38L — 4-7 yrs
+      https://cutshort.io/job/Backend-Fullstack-Recro-cRXOFoFl
+      Skills: NodeJS (Node.js), GraphQL, React.js, TypeScript, Fullstack Developer
+
+ 39. .NET Full stack developer with React JS — Ekloud INC — Remote — ₹25L — 7-15 yrs
+      Profitable · 20-100 · Services
+      https://cutshort.io/job/-NET-Full-stack-developer-with-React-JS-Ekloud-INC-D1NyLMlE
+      Skills: .NET, Fullstack Developer, React.js, cloud platforms, Windows Azure, API
+
+ 40. Java Angular FullStack Developer — Ekloud INC — Remote — ₹30L — 8-15 yrs
+      Profitable · 20-100 · Services
+      https://cutshort.io/job/Java-Angular-FullStack-Developer-Ekloud-INC-hFcD4mRl
+      Skills: java, Fullstack Developer, Angular (2+), Spring Boot, SQL, Microservices
+
+ 41. Manager - Software Engineering — Child Growth Monitor — Remote — ₹7.5L-₹15L — 8-15 yrs
+      Raised funding · 0-20 · Product
+      https://cutshort.io/job/Manager-Software-Engineering-Child-Growth-Monitor-4C5NdfF3
+      Skills: Team Management, Engineering Management, Python, Flask, NodeJS (Node.js), React Native
+
+ 42. Head of Engineering — Bangalore based high growth AI based company — Remote — ₹35L-₹75L — 7-15 yrs
+      https://cutshort.io/job/Head-of-Engineering-Qrata-JH8HDcks
+      Skills: Engineering Management, Engineering Manager, Engineering Head, Engineering Director, Engineering Leader, Director of Engineering
+
+ 43. Sr. Backend Engineer — Service based company giving service to Fintech and Crypto  — Remote — ₹10L-₹25L — 5-7 yrs
+      https://cutshort.io/job/Sr-Backend-Engineer-RedString-BDPdqlgI
+      Skills: Go Programming (Golang), PostgreSQL, Redis, Apache Kafka, Kubernetes, grpc
+
+ 44. Python Developer — Iitil — Remote — ₹12L — 3-10 yrs
+      Profitable · 20-100 · Products & Services
+      https://cutshort.io/job/Python-Developer-Iitil-UDi5IDpx
+      Skills: FastAPI, Django, Flask, Python
+
+ 45. React.js Developer — Iitil — Remote — ₹12L — 3-12 yrs
+      Profitable · 20-100 · Products & Services
+      https://cutshort.io/job/React-js-Developer-Iitil-SOuTlB1e
+      Skills: Javascript, css3, HTML/CSS
+
+ 46. Staff Frontend Engineer - AI Agents (React + AI Coding Tools) — Technology, Information and Internet — Remote — ₹45L-₹100L — 7-10 yrs
+      https://cutshort.io/job/Staff-Frontend-Engineer-AI-Agents-React-AI-Coding-Tools-Recruiting-Bond-lWiesefg
+      Skills: React.js, TypeScript, NextJs (Next.js), Vercel, tailwindcss, User Interface (UI) Design
+
+ 47. Frontend Developer — Syphoon — Remote — ₹7L — 5-6 yrs
+      Profitable · 0-20 · Products & Services
+      https://cutshort.io/job/Frontend-Developer-Syphoon-QOegxGx2
+      Skills: NextJs (Next.js), React Native, Figma, React.js, tailwindcss, Vue.js
+
+ 48. Design Engineer — Certa — Remote — ₹40L — 2-8 yrs
+      Raised funding · 100-1000 · Products & Services
+      https://cutshort.io/job/Design-Engineer-Certa-tTWZDBaN
+      Skills: React.js, Figma, User Interface (UI) Design, TypeScript, Accessibility, Responsive Design
+
+ 49. Software developer — UNIABROAD — Remote — ₹10L — 2-3 yrs
+      Profitable · 100-1000 · Products & Services
+      https://cutshort.io/job/Software-developer-UNIABROAD-SCjqtw6c
+      Skills: Java, Software Development
+
+ 50. Senior Frontend Engineer - SDE III — Certa — Remote — ₹12.5L-₹45L — 3-8 yrs
+      Raised funding · 100-1000 · Products & Services
+      https://cutshort.io/job/Senior-Frontend-Engineer-SDE-III-Certa-UEKFbfDd
+      Skills: React.js, TypeScript, Javascript, Accessibility, Responsive Design
+
+ 51. Software developer — Uniprep — Remote — ₹12L-₹15L — 3-5 yrs
+      Profitable · 20-100 · Product
+      https://cutshort.io/job/Software-developer-Uniprep-mAc4tnBo
+      Skills: Software Development
+
+ 52. Senior FrontEnd Software Engineer — AI GTM Platform for Faster B2B Pipeline Growth — Remote — ₹37.5L-₹120L — 4-10 yrs
+      https://cutshort.io/job/Senior-FrontEnd-Software-Engineer-Peak-Hire-Solutions-jCn4arai
+      Skills: React.js, Javascript, RESTful APIs, API, ReAct (Reason + Act), User Experience (UX) Design
+
+ 53. Sr. Frontend Developer (Javascript) — Appler — Remote — ₹10L — 4-6 yrs
+      Raised funding · 0-20 · Products & Services
+      https://cutshort.io/job/Sr-Frontend-Developer-Javascript-Appler-KY4c59Zg
+      Skills: Javascript, React Native, React.js, NodeJS (Node.js), SQL
+
+ 54. Frontend Engineer - Admin console & workflow studio — Tech AI startup in Bangalore — Remote — ₹10L — 3-5 yrs
+      https://cutshort.io/job/Frontend-Engineer-Admin-console-workflow-studio-Recruit-Square-JfUrUjJn
+      Skills: React Native, TypeScript, tailwindcss, Redux/Flux, API
+
+ 55. Frontend Devloper Internship — Springer Capital — Remote — 1 yrs
+      Profitable · 100-1000 · Products & Services
+      https://cutshort.io/job/Frontend-Devloper-Internship-Springer-Capital-lqCdsKj0
+      Skills: IT service management
+
+ 56. Frontend Developer — NeoGenCode Technologies Pvt Ltd — Remote — ₹5L-₹15L — 2-6 yrs
+      Raised funding · Services
+      https://cutshort.io/job/Frontend-Developer-NeoGenCode-Technologies-Pvt-Ltd-1pcdIfGQ
+      Skills: React.js, Blockchain, GMX, Hyperliquid, WebSocket, Charting libraries
+
+ 57. Lead Frontend Developer- Shopify — Marmeto — Remote — ₹6L-₹15L — 5-8 yrs
+      Profitable · 20-100 · Services
+      https://cutshort.io/job/Lead-Frontend-Developer-Shopify-Marmeto-aUh3ZBDC
+      Skills: Shopify, Team leadership, HTML/CSS, React.js
+
+ 58. frontend developer — Cymetrix Software — Remote — ₹5L-₹21L — 4-7 yrs
+      Profitable · 20-100 · Services
+      https://cutshort.io/job/frontend-developer-Cymetrix-Software-JnHdMC1p
+      Skills: AngularJS (1.x), Angular (2+), Javascript, HTML/CSS
+
+ 59. Senior React.js Developer (Remote) — Technorex Infoways — Remote — ₹20L — 3-6 yrs
+      Profitable · 20-100 · Services
+      https://cutshort.io/job/Senior-React-js-Developer-Remote-Technorex-Infoways-RqqNAf3Q
+      Skills: React.js, Javascript, TypeScript, HTML/CSS, Git, GitHub
+
+ 60. Frontend Developer Intern Remote — Springer Capital — Remote — ₹0.36L-₹0.6L
+      Profitable · 100-1000 · Products & Services
+      https://cutshort.io/job/Frontend-Developer-Intern-Remote-Springer-Capital-DP2RmxgR
+      Skills: Java
+
+ 61. Frontend / Chrome Extension Developer (React + TypeScript) — NeoGenCode Technologies Pvt Ltd — Remote — ₹12L — 3-6 yrs
+      Raised funding · Services
+      https://cutshort.io/job/Frontend-Chrome-Extension-Developer-React-TypeScript-NeoGenCode-Technologies-Pvt-Ltd-nhYJD32a
+      Skills: React.js, TypeScript, Chrome Extension (MV3), Content Scripts, DOM Injection, MutationObserver
+
+ 62. Angular Developer — Ekloud INC — Remote — ₹12L — 5-7 yrs
+      Profitable · 20-100 · Services
+      https://cutshort.io/job/Angular-Developer-Ekloud-INC-OOz6KhNR
+      Skills: Angular,, 06692
+
+ 63. Full stack Deveoper — iONHealth — Remote — ₹15L-₹50L — 6-13 yrs
+      Raised funding · 0-20 · Products & Services
+      https://cutshort.io/job/Full-stack-Deveoper-iONHealth-szq0fc7g
+      Skills: React.js, React Native, NodeJS (Node.js)
+
+ 64. Senior Microfrontend Engineer — Techmango Technology Services Private Limited — Remote — ₹12.5L-₹30L — 5-15 yrs
+      Profitable · 100-1000 · Products & Services
+      https://cutshort.io/job/Senior-Microfrontend-Engineer-Techmango-Technology-Services-Private-Limited-6z3ChjH2
+      Skills: Micro frontend, Angular (2+), Module Federation
+
+ 65. React.js Developer with PWA Studio (Remote) — NeoGenCode Technologies Pvt Ltd — Remote — ₹12L — 8-12 yrs
+      Raised funding · Services
+      https://cutshort.io/job/React-js-Developer-with-PWA-Studio-Remote-NeoGenCode-Technologies-Pvt-Ltd-LLhOIBFu
+      Skills: React.js, NextJs (Next.js), Progressive Web Apps (PWA), Magento PWA Studio, Magento, Magento 2.x Integration
+
+ 66. Flutter Frontend development — PEMS Digital — Remote — ₹6L — 3-5 yrs
+      Raised funding · 0-20 · Products & Services
+      https://cutshort.io/job/Flutter-Frontend-development-PEMS-Digital-oWPN556q
+      Skills: Flutter, Object Oriented Programming (OOPs), Data Structures, Android Development, iOS App Development
+
+ 67. Web Designer ( Frontend Developer) — Hiraya Digital — Remote — ₹3L — 1-4 yrs
+      Profitable · 0-20 · Services
+      https://cutshort.io/job/Web-Designer-Frontend-Developer-Hiraya-Digital-Pb8Th1Pt
+      Skills: Web design, HTML/CSS, Javascript, Bootstrap, Wordpress, Responsive Design
+
+ 68. React Native Developer with PHP Developer(Strong backend Knowledge) — httpswwwicloudemscom — Remote — ₹8L — 3-7 yrs
+      Profitable · 100-500 · Product
+      https://cutshort.io/job/React-Native-Developer-with-PHP-Developer-Strong-backend-Knowledge-httpswwwicloudemscom-oWDoq49q
+      Skills: MySQL, phpMyAdmin, React Native, Android Development, Web Development, Mobile App Development
+
+ 69. Full Stack Web Developer with AI Intern — SkillsecureX — Remote — ₹1.44L-₹2.16L — 1 yrs
+      Profitable · 20-100 · Services
+      https://cutshort.io/job/Full-Stack-Web-Developer-with-AI-Intern-SkillsecureX-jueR3Uri
+      Skills: HTML/CSS, Javascript, Web Development
+
+ 70. Web Developer with AI Intern — LetsIntern careers — Remote — ₹1.44L-₹1.8L — 1 yrs
+      Profitable · 20-100 · Services
+      https://cutshort.io/job/Web-Developer-with-AI-Intern-LetsIntern-careers-bUrptDeR
+      Skills: HTML/CSS, Javascript, Artificial Intelligence (AI), Web Development
+
+ 71. Full Stack Web Developer with AI — SkillsecureX — Remote — ₹1.44L-₹2.16L — 1 yrs
+      Profitable · 20-100 · Services
+      https://cutshort.io/job/Full-Stack-Web-Developer-with-AI-SkillsecureX-8Y0kWyam
+      Skills: HTML/CSS, Javascript, Artificial Intelligence (AI), Web Development
+
+ 72. AI Powered Full Stack Web Developer Intern — LetsIntern careers — Remote — ₹1.44L-₹2.16L — 1 yrs
+      Profitable · 20-100 · Services
+      https://cutshort.io/job/AI-Powered-Full-Stack-Web-Developer-Intern-LetsIntern-careers-0zTTnpLO
+      Skills: Javascript, HTML/CSS, Artificial Intelligence (AI), Web Development
+
+ 73. Full Stack Web Developer Internship — LetsIntern careers — Remote — ₹1.44L-₹2.16L — 1 yrs
+      Profitable · 20-100 · Services
+      https://cutshort.io/job/Full-Stack-Web-Developer-Internship-LetsIntern-careers-Bw71a75w
+      Skills: Web Development, HTML/CSS, Javascript, Artificial Intelligence (AI)
+
+ 74. Web Developer with AI Integration – Internship — LetsIntern careers — Remote — ₹1.44L-₹2.16L — 1 yrs
+      Profitable · 20-100 · Services
+      https://cutshort.io/job/Web-Developer-with-AI-Integration-Internship-LetsIntern-careers-rgWiHae1
+      Skills: Web Development, Artificial Intelligence (AI), Javascript
+
+ 75. Web Developer with AI — LetsIntern — Remote — ₹1.44L-₹2.16L — 1 yrs
+      Profitable · 0-20 · Services
+      https://cutshort.io/job/Web-Developer-with-AI-LetsIntern-h4Wlceua
+      Skills: Javascript, Artificial Intelligence (AI), Web Development
+
+ 76. Senior Software Engineer – Backend — Snaphyr  — Remote — ₹10L-₹70L — 6-9 yrs
+      https://cutshort.io/job/Senior-Software-Engineer-Backend-SnapHyr-TkN9sfBM
+      Skills: Java, Spring Boot, RESTful APIs, Microservices, DevOps, Cloud Computing
+
+ 77. Founding Full-Stack Software Engineer – Next.js | Remote (India) — Mega Style Apartments — Remote — ₹4L — 99 yrs
+      Profitable · 0-20 · Products & Services
+      https://cutshort.io/job/Founding-Full-Stack-Software-Engineer-Next-js-Remote-India-Mega-Style-Apartments-OkZiqJsG
+      Skills: NextJs (Next.js), Frontend, User Experience (UX) Design, React.js, Database Design, CRO
+
+ 78. Front End Developer — Quenzo Tech — Remote — ₹5L-₹20L — 50 yrs
+      Profitable · 20-100 · Services
+      https://cutshort.io/job/Front-End-Developer-Quenzo-Tech-0aOnc91R
+      Skills: Web Development
+
+ 79. Senior / Lead Odoo Engineer — Gravity Engineering Services Pvt Ltd — Remote — ₹15L-₹40L — 5-8 yrs
+      Profitable · 100-1000 · Services
+      https://cutshort.io/job/Senior-Lead-Odoo-Engineer-Gravity-Engineering-Services-Pvt-Ltd-FioXxpUt
+      Skills: Python, Odoo (OpenERP), Web Development, ORM, Accounting
+
+ 80. Web developer Internship — Solar Secure — Remote — ₹0.96L-₹1.2L — 1 yrs
+      Raised funding · 0-20 · Services
+      https://cutshort.io/job/Web-developer-Internship-Solar-Secure-epWyzLYE
+      Skills: Web Development, HTML/CSS, Javascript
+
+ 81. Wobot.ai - Backend Developer - NodeJs/Mongodb — Wobot Intelligence — Remote — ₹6L-₹15L — 2-5 yrs
+      Raised funding · 100-500 · Product
+      https://cutshort.io/job/Wobot-ai-Backend-Developer-NodeJs-Mongodb-Wobot-Intelligence-uLBxkxwE
+      Skills: NodeJS (Node.js), MongoDB, Express, Postman, Web Development, RESTful APIs
+
+ 82. ASP.NET MVC developer — Prishusoft — Remote — ₹6L — 1-3 yrs
+      Profitable · 20-100 · Services
+      https://cutshort.io/job/ASP-NET-MVC-developer-Prishusoft-ch73r9Es
+      Skills: .NET, ASP.NET, C#, ASP.NET MVC, RESTful APIs, Web API
+
+ 83. UI/UX Designer and Developer — Oren — Remote — ₹10L — 2-5 yrs
+      Raised funding · 0-20 · Product
+      https://cutshort.io/job/UI-UX-Designer-and-Developer-Oren-aqh9hINd
+      Skills: Figma, User Experience (UX) Design, User Interface (UI) Design, Web Development, Web design, Web applications
+
+ 84. Java Developer — Jobiai — Remote — ₹8L — 1-5 yrs
+      Raised funding · 0-20 · Services
+      https://cutshort.io/job/Java-Developer-Jobiai-NoQAucN5
+      Skills: Java, Javascript, HTML/CSS, MySQL, Web Development, SQL
+
+ 85. HTML Developer — Jobiai — Remote — ₹6.5L — 1-5 yrs
+      Raised funding · 0-20 · Services
+      https://cutshort.io/job/HTML-Developer-Jobiai-I4G25a92
+      Skills: HTML/CSS, Bootstrap, Web design, React.js, Web Development
+
+ 86. Shopify Web Developer — Own an ecommerce brand company — Remote — 190931 USD-286396 USD — 2-5 yrs
+      https://cutshort.io/job/Shopify-Web-Developer-Conversion-Ecommerce-GTW9pd8C
+      Skills: Shopify, Web Development
+
+ 87. Sr. Java Developer — Unknown — Remote — ₹10L-₹25L — 5-10 yrs
+      https://cutshort.io/job/Sr-Java-Developer-IT-Sure-Solutions-2RL59EPX
+      Skills: Java, Software Development, Web Development, Hibernate (Java), Spring Boot, Object Oriented Programming (OOPs)
+
+ 88. Shopify Developer — AES Technologies — Remote — ₹6L — 2-5 yrs
+      Raised funding · 100-1000 · Services
+      https://cutshort.io/job/Shopify-Developer-AES-Technologies-India-pvt-u16WMYt6
+      Skills: AngularJS (1.x), Angular (2+), React.js, NodeJS (Node.js), HTML/CSS, Shopify
+
+ 89. Angular+Node.JS + MYSQL Full Stack Developer — AtDrive Group — Remote — ₹8L — 2-5 yrs
+      Profitable · 20-100 · Services
+      https://cutshort.io/job/Angular-Node-JS-MYSQL-Full-Stack-Developer-AtDrive-Group-7jextO3i
+      Skills: Angular (2+), NodeJS (Node.js), MySQL, AJAX, RESTful APIs, TypeScript
+
+ 90. QA Engineer (Manual+Automation) — GlobalSignIn — Remote — ₹14L — 2-5 yrs
+      Profitable · 20-100 · Product
+      https://cutshort.io/job/QA-Engineer-Manual-Automation-GlobalSignIn-b09CjSoq
+      Skills: Software Testing (QA), Manual testing, Test Automation (QA), Selenium, Selenium Web driver, Javascript
+
+ 91. Remote Lead MS 365 Developer — Wama Technology — Remote — ₹7.5L-₹18L — 4-10 yrs
+      Profitable · 20-100 · Services
+      https://cutshort.io/job/Remote-Lead-MS-365-Developer-Wama-Technology-T0mYQJr4
+      Skills: Microsoft Dynamics, Microsoft Dynamics CRM, D365, Power Automate, C#, Javascript
+
+ 92. Lead .Net Full Stack — Gradera AI Technologies — Remote — ₹7.5L-₹50L — 6-15 yrs
+      Profitable · 20-100 · Product
+      https://cutshort.io/job/Lead-Net-Full-Stack-Gradera-AI-Technologies-tfSafFgC
+      Skills: .NET, React.js, TypeScript, Microservices, Javascript, GitHub
+
+ 93. Tech Assistant Intern - Data Engineering & DevOps (Remote) — Springer Capital — Remote — ₹0.6L-₹0.84L — 1 yrs
+      Profitable · 100-1000 · Products & Services
+      https://cutshort.io/job/Tech-Assistant-Intern-Data-Engineering-DevOps-Remote-Springer-Capital-2ao242HR
+      Skills: DevOps, Machine Learning (ML), Artificial Intelligence (AI), Analytical Skills, MS-Excel, Data management
+
+ 94. Design Engineer — GlobalSignIn — Remote — ₹6L-₹20L — 3-5 yrs
+      Profitable · 20-100 · Product
+      https://cutshort.io/job/Design-Engineer-GlobalSignIn-PNw79Sth
+      Skills: Product design, Figma, SaaS, Artificial Intelligence (AI), Frontend, React.js
+
+ 95. Senior Software Development Engineer in Test (SDET) — Opteamix — Remote — ₹7.5L-₹20L — 3-6 yrs
+      Profitable · 100-1000 · Services
+      https://cutshort.io/job/Senior-Software-Development-Engineer-in-Test-SDET-Opteamix-LQr9u6pY
+      Skills: Python, Java, Javascript, C#, Data Structures, Algorithms
+
+ 96. PHP Full Stack Developer — Royal IT Park Services — Remote — ₹5L — 2-4 yrs
+      Profitable · 0-20 · Services
+      https://cutshort.io/job/PHP-Full-Stack-Developer-Royal-IT-Park-Services-LbE4Denx
+      Skills: CodeIgniter, HTML/CSS, Laravel, Javascript, Bootstrap, PHP
+
+ 97. QA Engineer — Certa — Remote — ₹15L — 2-5 yrs
+      Raised funding · 100-1000 · Products & Services
+      https://cutshort.io/job/QA-Engineer-Certa-3Ps42ey6
+      Skills: Manual testing, Test Automation (QA), API QA, Python, Java, Playwright
+
+ 98. Blockchain Backend Developer — - — Remote — 2.23881e+06 USD-6.26866e+06 USD — 4-15 yrs
+      https://cutshort.io/job/Blockchain-Backend-Developer-Qubit-Labs-tnKptn3N
+      Skills: Blockchain, Go Programming (Golang), Python, Javascript, TypeScript, NodeJS (Node.js)
+
+ 99. Software Development Engineer in Test - SDET — Certa — Remote — ₹7.5L-₹30L — 2-8 yrs
+      Raised funding · 100-1000 · Products & Services
+      https://cutshort.io/job/Software-Development-Engineer-in-Test-SDET-Certa-yt8n6meH
+      Skills: TypeScript, Javascript, Test Automation (QA), Test Planning, CI/CD, RESTful APIs
+
+100. Power Apps Developer — AI Industry  — Remote — ₹9L-₹25L — 5-15 yrs
+      https://cutshort.io/job/Power-Apps-Developer-Peak-Hire-Solutions-NgyIdrgX
+      Skills: PowerBI, SQL, Mobile App Development, Windows App Development, Scripting, MS SharePoint

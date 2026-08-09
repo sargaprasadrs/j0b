@@ -1,7 +1,14 @@
-"""Fetch jobs from free/legal APIs: Remotive, Jobicy, optional Adzuna.
+"""Fetch jobs from free/legal APIs: Remotive, Jobicy, optional Adzuna,
+and the freehire.me aggregator (tech-focused, multi-market, no API key).
 
 Output shape (dict):
     id, title, company, location, url, source, description, salary, tags
+
+freehire (ported from ai-job-search's freehire-search skill):
+    GET {base}/api/v1/agent/jobs/search returns postings from ~50 ATS
+    platforms across many markets with full descriptions, structured skills
+    and salary enrichment. See https://freehire.me/api/v1/jobs/facets for the
+    live facet vocabularies (regions/countries/seniority/category/work_mode).
 """
 from __future__ import annotations
 
@@ -97,6 +104,83 @@ def fetch_jobicy(limit: int = 50) -> list[dict]:
     return jobs
 
 
+def fetch_freehire(cfg: dict, limit: int = 50) -> list[dict]:
+    """Search the freehire.me aggregator (public JSON API, no API key).
+
+    Facets come from sources.freehire: regions, countries, cities,
+    seniority, category, skills, work_mode, jobage. The base URL is
+    swappable (FREEHIRE_API_URL env or config) for a self-hosted instance.
+    """
+    fh = cfg.get("sources", {}).get("freehire", {})
+    base = (fh.get("base_url") or "https://freehire.me").rstrip("/")
+    jobs: list[dict] = []
+    keywords = cfg.get("search", {}).get("keywords", [])
+    params: dict = {
+        "limit": min(int(limit or 25), 50),
+        "offset": 0,
+        "semantic_ratio": "0",  # plain keyword search; semantic is opt-in
+        "include_description": "true",  # full text per hit, no follow-up fetch
+        "description_format": "text",
+    }
+    q = " ".join(k for k in keywords if k and str(k).strip())[:200]
+    if q:
+        params["q"] = q
+    jobage = fh.get("jobage")
+    if jobage:
+        params["posted_within_days"] = int(jobage)
+    if fh.get("work_mode"):
+        params["work_mode"] = fh["work_mode"]
+    for key in ("regions", "countries", "cities", "seniority", "category",
+                "skills"):
+        for value in (fh.get(key) or []):
+            if str(value).strip():
+                params.setdefault(key, []).append(str(value).strip())
+    try:
+        r = requests.get(base + "/api/v1/agent/jobs/search", params=params,
+                         headers=HEADERS, timeout=25)
+        r.raise_for_status()
+        data = r.json()
+    except Exception as exc:  # noqa: BLE001
+        print(f"  [freehire] failed: {exc}")
+        return jobs
+    for j in data.get("data", []):
+        enrich = j.get("enrichment") or {}
+        cities = j.get("cities") or []
+        location = (j.get("location") or "").strip()
+        if not location and cities:
+            location = ", ".join(cities)
+        if not location and j.get("work_mode") == "remote":
+            location = "Remote"
+        salary = ""
+        if enrich.get("salary_min") is not None or enrich.get("salary_max") is not None:
+            cur = enrich.get("salary_currency") or ""
+            parts = [p for p in (enrich.get("salary_min"), enrich.get("salary_max"))
+                     if p is not None]
+            salary = f"{cur} {parts[0]}" if len(parts) == 1 else \
+                f"{cur} {parts[0]}-{parts[1]}"
+        tags = ", ".join(j.get("skills") or [])
+        if enrich.get("category"):
+            tags = f"{enrich.get('category')} | {tags}".strip(" |")
+        jobs.append({
+            "id": _job_id("freehire", j.get("url", "")),
+            "title": (j.get("title") or "").strip(),
+            "company": (j.get("company") or "").strip(),
+            "location": location or "remote",
+            "url": j.get("url") or "",
+            "source": "freehire",
+            "description": _clean(j.get("description", ""))[:4000],
+            "salary": salary,
+            "salaryMin": enrich.get("salary_min"),
+            "salaryMax": enrich.get("salary_max"),
+            "salaryCurrency": enrich.get("salary_currency") or "",
+            "salaryPeriod": "yearly",
+            "tags": tags,
+            "seniority": enrich.get("seniority"),
+            "work_mode": j.get("work_mode"),
+        })
+    return jobs
+
+
 def fetch_adzuna(cfg: dict, limit: int = 50) -> list[dict]:
     ad = cfg.get("sources", {}).get("adzuna", {})
     app_id, app_key = ad.get("app_id", ""), ad.get("app_key", "")
@@ -152,6 +236,10 @@ def fetch_all(cfg: dict) -> list[dict]:
     if src_cfg.get("jobicy", {}).get("enabled", True):
         print("[jobs] jobicy ...")
         raw += fetch_jobicy(limit)
+        time.sleep(0.4)
+    if src_cfg.get("freehire", {}).get("enabled", True):
+        print("[jobs] freehire ...")
+        raw += fetch_freehire(cfg, limit)
         time.sleep(0.4)
     if src_cfg.get("adzuna", {}).get("enabled", False):
         print("[jobs] adzuna ...")

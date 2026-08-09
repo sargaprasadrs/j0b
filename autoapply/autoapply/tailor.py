@@ -54,11 +54,19 @@ def _ollama(base_url: str, model: str, system: str, prompt: str,
 
 def _system_prompt(cfg: dict) -> str:
     cand = cfg.get("candidate", {})
+    locs = ", ".join(cand.get("preferred_locations", [])) or "anywhere"
+    sal = ""
+    lo, hi = cand.get("desired_salary_min"), cand.get("desired_salary_max")
+    if lo or hi:
+        sal = f" Desired salary: {lo or '?'}-{hi or '?'}/yr."
+    roles = ", ".join(cand.get("roles", [])) or "software engineer"
     return (
         "You are an honest job-application writing assistant. Polite and "
         "frank, no hype, no buzzwords, no 'I hope this email finds you "
         "well'. Concrete and specific. Plain text, no markdown.\n"
         f"Candidate: {cand.get('name','[NAME]')} - {cand.get('headline','')}.\n"
+        f"Target roles: {roles}. Experience: {cand.get('years_of_exp') or 'n/a'} years."
+        f" Preferred locations: {locs}.{sal}\n"
         f"Skills: {', '.join(cand.get('skills', [])) or 'n/a'}.\n"
         f"Summary: {cand.get('summary','')}."
     )

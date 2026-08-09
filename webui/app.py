@@ -14,11 +14,14 @@ from __future__ import annotations
 import csv
 import json
 import sys
+import threading
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "autoapply"))
 
 from flask import Flask, jsonify, render_template, request  # noqa: E402
+
+from agent_backend import backend_from_config                  # noqa: E402
 
 from autoapply.config import load_config, save_config  # noqa: E402
 from autoapply import filters as flt                      # noqa: E402
@@ -35,6 +38,22 @@ RESUME_DIR = AUTOAPPLY_ROOT / "data"
 
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 10 * 1024 * 1024  # 10 MB resume
+
+# shared, thread-safe agent backend (opencode + composio)
+_agent_lock = threading.Lock()
+_agent_backend = None
+
+
+def _agent():
+    global _agent_backend
+    with _agent_lock:
+        if _agent_backend is None:
+            _agent_backend = backend_from_config(_cfg())
+        return _agent_backend
+
+
+def _candidate(cfg: dict) -> dict:
+    return cfg.get("candidate", {})
 
 
 # --------------------------------------------------------------------------
@@ -85,6 +104,7 @@ def get_config():
         "search": cfg.get("search", {}),
         "sources": cfg.get("sources", {}),
         "ollama": cfg.get("ollama", {}),
+        "agent": cfg.get("agent", {}),
     })
 
 
@@ -160,7 +180,7 @@ def search():
 
     # enable/disable sources
     src_cfg = cfg.setdefault("sources", {})
-    for key in ("remotive", "jobicy"):
+    for key in ("remotive", "jobicy", "freehire"):
         if key in body.get("sources", {}):
             src_cfg.setdefault(key, {})["enabled"] = bool(body["sources"][key])
 
@@ -236,7 +256,10 @@ def log_status():
     body = request.get_json(force=True, silent=True) or {}
     job = body.get("job") or {}
     status = (body.get("status") or "").strip().lower()
-    if status not in ("applied", "skipped", "rejected"):
+    # tracker vocabulary extended for the /html-report style funnel:
+    # applied -> interview -> offer -> hired, plus rejected/withdrawn/no_response
+    if status not in ("applied", "interview", "offer", "hired",
+                      "rejected", "withdrawn", "no_response", "skipped"):
         return jsonify({"ok": False, "error": "bad status"}), 400
     from autoapply.apply_agent import _record
     _record(job, status)
@@ -251,6 +274,124 @@ def status_log():
         with open(log_file, newline="", encoding="utf-8") as fh:
             rows = list(csv.DictReader(fh))
     return jsonify({"ok": True, "rows": rows})
+
+
+# --------------------------------------------------------------------------
+# AI agent backend (opencode brain + composio tools)
+# --------------------------------------------------------------------------
+def _find_job(job_id: str) -> dict | None:
+    if not job_id:
+        return None
+    for j in (jobs_mod.load_jobs() + matcher_mod.load_matches()):
+        if str(j.get("id", "")).startswith(job_id):
+            return j
+    return None
+
+
+@app.route("/api/agent/status", methods=["GET"])
+def agent_status():
+    return jsonify({"ok": True, "status": _agent().status()})
+
+
+@app.route("/api/agent/chat", methods=["POST"])
+def agent_chat():
+    body = request.get_json(force=True, silent=True) or {}
+    message = (body.get("message") or "").strip()
+    if not message:
+        return jsonify({"ok": False, "error": "message required"}), 400
+    result = _agent().chat(
+        message=message,
+        job=_find_job(body.get("job_id", "")),
+        candidate=_candidate(_cfg()),
+    )
+    code = 200 if result.get("ok") else 502
+    return jsonify({"ok": result.get("ok"), **result}), code
+
+
+@app.route("/api/agent/interview", methods=["POST"])
+def agent_interview():
+    body = request.get_json(force=True, silent=True) or {}
+    mode = (body.get("mode") or "prep").strip()
+    if mode not in ("prep", "mock"):
+        mode = "prep"
+    result = _agent().interview_prep(
+        job=_find_job(body.get("job_id", "")),
+        candidate=_candidate(_cfg()),
+        mode=mode,
+        stage=(body.get("stage") or "").strip(),
+    )
+    code = 200 if result.get("ok") else 502
+    return jsonify({"ok": result.get("ok"), **result}), code
+
+
+@app.route("/api/report", methods=["POST"])
+def report_dashboard():
+    from autoapply.report import generate_report
+    res = generate_report()
+    return jsonify({"ok": True, "path": res["path"], "stats": res["stats"]})
+
+
+@app.route("/tracker-report.html", methods=["GET"])
+def tracker_report_page():
+    """Serve the generated self-contained dashboard (autoapply/data/report.html)."""
+    from flask import send_from_directory
+    return send_from_directory(AUTOAPPLY_ROOT / "data", "report.html")
+
+
+@app.route("/api/cv", methods=["POST"])
+def make_cv():
+    cfg = _cfg()
+    body = request.get_json(force=True, silent=True) or {}
+    job = _find_job(body.get("job_id", ""))
+    if job is None:
+        return jsonify({"ok": False, "error": "job not found"}), 404
+    from autoapply.cv import build_documents
+    res = build_documents(cfg, job, use_ai=bool(body.get("use_ai", True)))
+    out = {"ok": res.get("ok", True), **res}
+    code = 200 if out["ok"] else 502
+    return jsonify(out), code
+
+
+@app.route("/cv/<path:rel>", methods=["GET"])
+def cv_file(rel):
+    """Serve generated CV/cover PDFs + .tex sources (autoapply/data/cv)."""
+    from flask import send_from_directory
+    root = AUTOAPPLY_ROOT / "data" / "cv"
+    return send_from_directory(root, rel)
+
+
+@app.route("/api/agent/compose", methods=["POST"])
+def agent_compose():
+    body = request.get_json(force=True, silent=True) or {}
+    result = _agent().compose_draft(
+        job=_find_job(body.get("job_id", "")),
+        candidate=_candidate(_cfg()),
+        kind=(body.get("kind") or "followup"),
+    )
+    code = 200 if result.get("ok") else 502
+    return jsonify({"ok": result.get("ok"), **result}), code
+
+
+@app.route("/api/agent/draft", methods=["POST"])
+def agent_draft():
+    body = request.get_json(force=True, silent=True) or {}
+    to = (body.get("to") or "").strip()
+    subject = (body.get("subject") or "").strip()
+    text = (body.get("body") or "").strip()
+    if not (to and subject and text):
+        return jsonify({"ok": False, "error": "to, subject and body required"}), 400
+    return jsonify(_agent().draft_to_gmail(to=to, subject=subject, body=text))
+
+
+@app.route("/api/agent/connect", methods=["POST"])
+def agent_connect():
+    body = request.get_json(force=True, silent=True) or {}
+    app_name = (body.get("app") or "gmail").lower()
+    return jsonify({
+        "ok": True,
+        "app": app_name,
+        "instructions": _agent().composio.connect_instructions(app_name),
+    })
 
 
 if __name__ == "__main__":

@@ -6,6 +6,8 @@ Commands:
   match [--mode keywords|ai]            score jobs vs your resume
   tailor [--top N] [--no-ai]            generate per-job cover letter + summary
   apply  --job-id N [--dry-run]         semi-auto apply (pre-fill, YOU submit)
+  cv     --job-id N [--no-ai]           LaTeX CV + cover letter (PDF, needs LaTeX)
+  report [--open]                       HTML application-tracker dashboard
   status                                 show application log
 
 Examples:
@@ -14,6 +16,8 @@ Examples:
   python cli.py tailor --top 10
   python cli.py apply --job-id 3 --dry-run
   python cli.py apply --job-id 3
+  python cli.py cv --job-id 3
+  python cli.py report --open
   python cli.py status
 """
 from __future__ import annotations
@@ -99,6 +103,46 @@ def cmd_status(args) -> None:
     show_status()
 
 
+def cmd_report(args) -> None:
+    from autoapply.report import generate_report
+    res = generate_report()
+    print(f"[report] dashboard written to {res['path']}")
+    st = res["stats"]
+    print(f"[report] {st['total']} applications · "
+          f"{st['counts'].get('Active', 0)} active · "
+          f"{st['counts'].get('Interview', 0)} interview · "
+          f"{st['counts'].get('Hired', 0)} hired · "
+          f"{st['counts'].get('Rejected/Closed', 0)} rejected/closed · "
+          f"{st['interview_rate']}% past resume screen")
+    if args.open:
+        import webbrowser
+        webbrowser.open(res["path"])
+        print(f"[report] opened in your browser")
+
+
+def cmd_cv(args) -> None:
+    cfg = load_config(args.config)
+    matches = load_matches()
+    if not matches:
+        sys.exit("no matches - run `python cli.py search` + `python cli.py match`")
+    job = _pick_job(matches, args.job_id)
+    if job is None:
+        sys.exit("job not found - run `python cli.py match` and pick an id")
+    from autoapply.cv import build_documents
+    res = build_documents(cfg, job, use_ai=not args.no_ai)
+    print(f"[cv] job: {job['title']} @ {job['company']}")
+    print(f"[cv] sources: {res['cv_tex']}")
+    print(f"[cv]          {res['cover_tex']}")
+    if res.get("cv_pdf"):
+        print(f"[cv] cv.pdf   : {res['cv_pdf']} ({res.get('cv_pages')} pages)")
+        print(f"[cv] cover.pdf: {res['cover_pdf']} ({res.get('cover_pages')} pages)")
+        print(f"[cv] engine   : {res.get('engine')}")
+    else:
+        print(f"[cv] engine   : {res.get('engine') or 'NONE'}")
+    for w in res.get("warnings", []):
+        print(f"[cv] WARNING: {w}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="autoapply - semi-auto apply")
     parser.add_argument("--config", default="config.yaml")
@@ -125,6 +169,15 @@ def main() -> None:
 
     p_status = sub.add_parser("status")
     p_status.set_defaults(func=cmd_status)
+
+    p_cv = sub.add_parser("cv")
+    p_cv.add_argument("--job-id", required=True)
+    p_cv.add_argument("--no-ai", action="store_true")
+    p_cv.set_defaults(func=cmd_cv)
+
+    p_report = sub.add_parser("report")
+    p_report.add_argument("--open", action="store_true")
+    p_report.set_defaults(func=cmd_report)
 
     args = parser.parse_args()
     args.func(args)

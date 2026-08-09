@@ -73,6 +73,7 @@ main {
 .grid { display: grid; gap: 12px; margin-bottom: 12px; }
 .grid.two { grid-template-columns: 1fr 1fr; }
 .grid.three { grid-template-columns: 1fr 1fr 1fr; }
+.grid .full { grid-column: 1 / -1; }
 
 label { display: flex; flex-direction: column; gap: 5px; font-size: 13px; color: var(--muted); }
 
@@ -202,6 +203,42 @@ textarea { resize: vertical; }
   padding: 10px 18px; border-radius: 999px; font-size: 13px;
   z-index: 100; box-shadow: 0 8px 24px rgba(0,0,0,0.4);
 }
+
+/* ---- AI agent ---- */
+#agent-pill {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  background: var(--bg-3);
+}
+.agent-log {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 10px;
+  max-height: 320px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 12px 0;
+}
+.agent-msg {
+  max-width: 88%;
+  padding: 8px 11px;
+  border-radius: 9px;
+  font-size: 13px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  border: 1px solid var(--border);
+  background: var(--bg-2);
+}
+.agent-msg.user { align-self: flex-end; border-color: #1f6feb; background: #132d4a; }
+.agent-msg.bot { align-self: flex-start; }
+
+.badge.verdict { background: #132d4a; border: 1px solid #1f6feb; color: #79b8ff; }
 
 @media (max-width: 720px) {
   .grid.two, .grid.three { grid-template-columns: 1fr; }

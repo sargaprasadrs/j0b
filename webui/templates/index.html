@@ -40,6 +40,36 @@
         <input id="cand-skills" placeholder="python, react, fastapi, docker">
       </label>
 
+      <div class="grid two">
+        <label>Target roles (comma separated)
+          <input id="cand-roles" placeholder="full-stack engineer, ai engineer">
+        </label>
+        <label>Years of experience
+          <input id="cand-years" type="number" min="0" max="50" placeholder="e.g. 4">
+        </label>
+        <label>Desired salary min (annual)
+          <input id="cand-sal-min" type="number" placeholder="e.g. 40">
+        </label>
+        <label>Desired salary max (annual)
+          <input id="cand-sal-max" type="number" placeholder="e.g. 120">
+        </label>
+        <label class="full">Preferred location (comma separated, "remote" = ok)
+          <input id="cand-locations" placeholder="remote, bangalore">
+        </label>
+        <label>Languages (one per line, "english: fluent")
+          <textarea id="cand-languages" rows="2" placeholder="english: fluent&#10;hindi: native"></textarea>
+        </label>
+        <label>Deal-breakers (comma separated, vetoes matching jobs)
+          <input id="cand-dealbreakers" placeholder="on-call, requires relocation">
+        </label>
+        <label class="full">Education (one line, optional)
+          <input id="cand-education" placeholder="B.Tech Computer Science, 2018-2022">
+        </label>
+        <label class="full">STAR examples (one per line: Project (skill): S:.. T:.. A:.. R:..)
+          <textarea id="cand-star" rows="3" placeholder="ai job matcher (python): S:.. T:.. A:.. R:.."></textarea>
+        </label>
+      </div>
+
       <div class="row">
         <label class="file-label">
           Resume (PDF / DOCX / TXT)
@@ -76,6 +106,7 @@
           <label class="check"><input id="f-startup" type="checkbox" checked> Startup only</label>
           <label class="check"><input id="f-remotive" type="checkbox" checked> Remotive</label>
           <label class="check"><input id="f-jobicy" type="checkbox" checked> Jobicy</label>
+          <label class="check"><input id="f-freehire" type="checkbox" checked> Freehire</label>
         </div>
       </div>
       <div class="row actions">
@@ -100,8 +131,58 @@
 
     <!-- ============ TRACKER ============ -->
     <section class="card" id="tracker-card" hidden>
-      <h2>Application tracker</h2>
+      <div class="row between">
+        <h2>Application tracker</h2>
+        <button class="btn ghost" id="btn-report">📈 Generate HTML report</button>
+      </div>
       <div id="tracker-list" class="tracker-list"></div>
+    </section>
+
+    <!-- ============ AI AGENT ============ -->
+    <section class="card" id="agent-card">
+      <div class="row between">
+        <h2>AI agent <span class="count" id="agent-pill" class="pill"></span></h2>
+        <div class="row">
+          <button class="btn ghost" id="btn-agent-refresh">refresh</button>
+          <button class="btn ghost" id="btn-agent-connect">connect Gmail</button>
+        </div>
+      </div>
+      <p class="hint" id="agent-status-line">checking backend…</p>
+
+      <label>Job context
+        <select id="agent-job">
+          <option value="">(no job context)</option>
+        </select>
+      </label>
+
+      <div class="agent-log" id="agent-log"></div>
+      <textarea id="agent-input" rows="3"
+        placeholder="e.g. Summarize this job and rate my fit, then draft a follow-up email"></textarea>
+      <div class="row actions">
+        <button class="btn primary" id="btn-agent-send">Send to agent</button>
+        <button class="btn ghost" data-compose="followup">Draft follow-up</button>
+        <button class="btn ghost" data-compose="cold">Cold outreach</button>
+        <button class="btn ghost" data-compose="cover">Cover letter</button>
+        <button class="btn ghost" id="btn-interview-prep">🎤 Interview prep</button>
+        <button class="btn ghost" id="btn-interview-mock">Mock interview</button>
+      </div>
+
+      <h4>Draft to Gmail <span class="hint">(Composio — creates a draft, never sends)</span></h4>
+      <div class="grid two">
+        <label>To
+          <input id="draft-to" placeholder="recruiter@startup.com">
+        </label>
+        <label>Subject
+          <input id="draft-subject" placeholder="Application for ...">
+        </label>
+        <label class="full">Body
+          <textarea id="draft-body" rows="4"></textarea>
+        </label>
+      </div>
+      <div class="row actions">
+        <button class="btn" id="btn-draft-gmail">Create Gmail draft</button>
+        <span class="hint" id="draft-status"></span>
+      </div>
     </section>
   </main>
 
@@ -123,11 +204,19 @@
         <pre id="tailor-summary"></pre>
         <p class="hint" id="tailor-file"></p>
         <div class="row actions">
+          <button class="btn" id="btn-cv-pdf">📄 Generate CV PDF (LaTeX)</button>
+          <span class="hint" id="cv-status"></span>
+        </div>
+        <div class="row actions">
           <button class="btn" id="btn-open-job">Open application page</button>
           <span class="spacer"></span>
           <button class="btn" data-log="applied">✅ Applied</button>
+          <button class="btn" data-log="interview">🎤 Interview</button>
+          <button class="btn ghost" data-log="offer">💌 Offer</button>
+          <button class="btn ghost" data-log="hired">🎉 Hired</button>
           <button class="btn ghost" data-log="skipped">⏭ Skipped</button>
           <button class="btn ghost" data-log="rejected">✖ Rejected</button>
+          <button class="btn ghost" data-log="no_response">📭 No reply</button>
         </div>
       </div>
     </div>

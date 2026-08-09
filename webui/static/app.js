@@ -37,12 +37,22 @@ async function loadConfig() {
     $("#cand-linkedin").value = c.linkedin || "";
     $("#cand-summary").value = c.summary || "";
     $("#cand-skills").value = (c.skills || []).join(", ");
+    $("#cand-roles").value = (c.roles || []).join(", ");
+    $("#cand-years").value = c.years_of_exp || "";
+    $("#cand-sal-min").value = c.desired_salary_min || "";
+    $("#cand-sal-max").value = c.desired_salary_max || "";
+    $("#cand-locations").value = (c.preferred_locations || []).join(", ");
+    $("#cand-languages").value = (c.languages || []).join("\n");
+    $("#cand-dealbreakers").value = (c.deal_breakers || []).join(", ");
+    $("#cand-education").value = c.education || "";
+    $("#cand-star").value = (c.star_examples || []).join("\n");
     $("#f-keywords").value = (s.keywords || []).join(", ");
     $("#f-locations").value = (s.locations || []).join(", ");
     $("#f-limit").value = s.limit || 40;
     const src = d.sources || {};
     $("#f-remotive").checked = src.remotive ? src.remotive.enabled !== false : true;
     $("#f-jobicy").checked = src.jobicy ? src.jobicy.enabled !== false : true;
+    $("#f-freehire").checked = src.freehire ? src.freehire.enabled !== false : true;
 
     const ollama = d.ollama || {};
     const base = ollama.base_url || "http://localhost:11434";
@@ -75,6 +85,10 @@ async function loadConfig() {
 // ---------------------------------------------------------------- profile
 $("#btn-save-profile").addEventListener("click", async () => {
   const skills = $("#cand-skills").value.split(",").map((s) => s.trim()).filter(Boolean);
+  const num = (sel) => {
+    const v = $(sel).value.trim();
+    return v === "" ? null : parseInt(v, 10) || null;
+  };
   try {
     await api("/api/config", {
       method: "POST",
@@ -86,6 +100,15 @@ $("#btn-save-profile").addEventListener("click", async () => {
           linkedin: $("#cand-linkedin").value.trim(),
           summary: $("#cand-summary").value.trim(),
           skills,
+          roles: $("#cand-roles").value.split(",").map((s) => s.trim()).filter(Boolean),
+          years_of_exp: num("#cand-years"),
+          desired_salary_min: num("#cand-sal-min"),
+          desired_salary_max: num("#cand-sal-max"),
+          preferred_locations: $("#cand-locations").value.split(",").map((s) => s.trim()).filter(Boolean),
+          languages: $("#cand-languages").value.split(/[\n,]/).map((s) => s.trim()).filter(Boolean),
+          deal_breakers: $("#cand-dealbreakers").value.split(",").map((s) => s.trim()).filter(Boolean),
+          education: $("#cand-education").value.trim(),
+          star_examples: $("#cand-star").value.split(/\n/).map((s) => s.trim()).filter(Boolean),
         },
       }),
     });
@@ -125,6 +148,7 @@ function collectFilters() {
     sources: {
       remotive: $("#f-remotive").checked,
       jobicy: $("#f-jobicy").checked,
+      freehire: $("#f-freehire").checked,
     },
     startup_only: $("#f-startup").checked,
     salary_min: parseInt($("#f-sal-min").value, 10) || null,
@@ -148,6 +172,7 @@ $("#btn-search").addEventListener("click", async () => {
     $("#btn-match").disabled = false;
     renderJobs();
     $("#results-card").hidden = false;
+    refreshJobOptions();
     toast(`${d.count} jobs found`);
   } catch (e) {
     $("#search-status").textContent = "search failed: " + e.message;
@@ -218,10 +243,11 @@ function renderJobs() {
     const startupBadge = j.startup
       ? '<span class="badge startup">startup</span>'
       : "";
+    const verdict = j.verdict ? `<span class="badge verdict">${esc(j.verdict)}</span>` : "";
     el.innerHTML = `
       <div class="score ${scoreClass(j.match_score)}">${score}</div>
       <div class="meta">
-        <p class="title">${esc(j.title)} ${startupBadge}
+        <p class="title">${esc(j.title)} ${startupBadge} ${verdict}
           <span class="badge src">${esc(j.source)}</span></p>
         <div class="sub">${esc(j.company)} · ${esc(j.location)}</div>
       </div>
@@ -296,6 +322,36 @@ $("#btn-close-modal").addEventListener("click", () => {
   $("#tailor-modal").hidden = true;
 });
 
+$("#btn-cv-pdf").addEventListener("click", async () => {
+  if (!selectedJobId) return;
+  const btn = $("#btn-cv-pdf");
+  const status = $("#cv-status");
+  btn.disabled = true;
+  status.textContent = "generating LaTeX + compiling (needs LaTeX installed)...";
+  try {
+    const useAi = !$("#tailor-template").checked;
+    const d = await api("/api/cv", {
+      method: "POST",
+      body: JSON.stringify({ job_id: selectedJobId, use_ai: useAi }),
+    });
+    const links = [];
+    if (d.cv_pdf) links.push(`<a href="/cv/${rel(d.cv_pdf)}" target="_blank">cv.pdf (${d.cv_pages} pages)</a>`);
+    if (d.cover_pdf) links.push(`<a href="/cv/${rel(d.cover_pdf)}" target="_blank">cover.pdf (${d.cover_pages} pages)</a>`);
+    status.innerHTML = links.length
+      ? "PDFs: " + links.join(" · ") + (d.warnings && d.warnings.length ? " · ⚠ " + d.warnings.join(" · ") : "")
+      : "no LaTeX engine found — sources written: " + rel(d.cv_tex) + " · install TeX Live/MiKTeX and re-run";
+  } catch (e) {
+    status.textContent = "cv failed: " + e.message;
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+function rel(p) {
+  const i = p.indexOf("data/cv/");
+  return i >= 0 ? p.slice(i + "data/cv/".length) : p.split(/[\\/]/).pop();
+}
+
 $("#btn-open-job").addEventListener("click", () => {
   if (selectedJob && selectedJob.url) window.open(selectedJob.url, "_blank");
 });
@@ -342,6 +398,193 @@ async function loadTracker() {
   }
 }
 
+// ---------------------------------------------------------------- report
+$("#btn-report").addEventListener("click", async () => {
+  const btn = $("#btn-report");
+  btn.disabled = true;
+  try {
+    const d = await api("/api/report", { method: "POST" });
+    window.open("/tracker-report.html", "_blank");
+    const st = d.stats || {};
+    toast(`report: ${st.total} applications · ${st.interview_rate}% past resume screen`);
+  } catch (e) {
+    toast("report failed: " + e.message);
+  } finally {
+    btn.disabled = false;
+  }
+});
+
 // ---------------------------------------------------------------- init
 loadConfig();
 loadTracker();
+
+// ---------------------------------------------------------------- AI agent
+let agentBusy = false;
+
+function agentPill(s) {
+  const pill = $("#agent-pill");
+  const ok = s.opencode && s.opencode.ok;
+  const gmail = s.gmail_draft_ready;
+  pill.textContent = ok ? (gmail ? "agent: ready + gmail" : "agent: ready")
+                        : "agent: fallback / offline";
+  pill.style.borderColor = ok ? "#238636" : (s.fallback && s.fallback.ok ? "#d29922" : "#f85149");
+  $("#agent-status-line").textContent =
+    `opencode: ${(s.opencode || {}).msg || "?"} · ` +
+    `composio: ${(s.composio || {}).msg || "?"} · ` +
+    `fallback: ${(s.fallback || {}).msg || "?"}`;
+}
+
+async function loadAgentStatus() {
+  try {
+    const d = await api("/api/agent/status");
+    agentPill(d.status || {});
+  } catch (e) {
+    $("#agent-status-line").textContent = "agent status failed: " + e.message;
+  }
+}
+
+function agentMsg(role, text) {
+  const log = $("#agent-log");
+  const el = document.createElement("div");
+  el.className = "agent-msg " + role;
+  el.textContent = text;
+  log.appendChild(el);
+  log.scrollTop = log.scrollHeight;
+  return el;
+}
+
+function selectedJobId() {
+  return $("#agent-job").value;
+}
+
+function refreshJobOptions() {
+  const sel = $("#agent-job");
+  const prev = sel.value;
+  sel.innerHTML = '<option value="">(no job context)</option>';
+  currentJobs.forEach((j) => {
+    const opt = document.createElement("option");
+    opt.value = j.id;
+    opt.textContent = `${j.company} — ${j.title}`;
+    sel.appendChild(opt);
+  });
+  if (prev) sel.value = prev;
+}
+
+async function agentSend(text) {
+  if (agentBusy) return;
+  if (!text) { toast("enter a message first"); return; }
+  agentBusy = true;
+  const btn = $("#btn-agent-send");
+  btn.disabled = true;
+  agentMsg("user", text);
+  const status = agentMsg("bot", "(thinking…)");
+  try {
+    const d = await api("/api/agent/chat", {
+      method: "POST",
+      body: JSON.stringify({ message: text, job_id: selectedJobId() }),
+    });
+    status.textContent = d.reply || "(empty reply)";
+    status.className = "agent-msg bot";
+    $("#agent-input").value = "";
+  } catch (e) {
+    status.textContent = "agent error: " + e.message;
+  } finally {
+    agentBusy = false;
+    btn.disabled = false;
+  }
+}
+
+async function agentCompose(kind) {
+  if (agentBusy) return;
+  agentBusy = true;
+  const status = agentMsg("bot", "(composing…)");
+  try {
+    const d = await api("/api/agent/compose", {
+      method: "POST",
+      body: JSON.stringify({ kind, job_id: selectedJobId() }),
+    });
+    const text = d.reply || "(empty)";
+    status.textContent = text;
+    status.className = "agent-msg bot";
+    $("#draft-body").value = text;
+    if (!$("#draft-subject").value && text) {
+      $("#draft-subject").value = kind === "cold"
+        ? "Exploring opportunities at your company"
+        : "Application follow-up";
+    }
+  } catch (e) {
+    status.textContent = "compose error: " + e.message;
+  } finally {
+    agentBusy = false;
+  }
+}
+
+$("#btn-agent-send").addEventListener("click", () => agentSend($("#agent-input").value.trim()));
+$("#agent-input").addEventListener("keydown", (ev) => {
+  if (ev.key === "Enter" && (ev.ctrlKey || ev.metaKey)) {
+    ev.preventDefault();
+    agentSend($("#agent-input").value.trim());
+  }
+});
+document.querySelectorAll("[data-compose]").forEach((b) =>
+  b.addEventListener("click", () => agentCompose(b.dataset.compose)));
+
+async function agentInterview(mode) {
+  if (agentBusy) return;
+  agentBusy = true;
+  const status = agentMsg("bot", mode === "mock" ? "(starting mock interview…)" : "(building prep pack…)");
+  try {
+    const d = await api("/api/agent/interview", {
+      method: "POST",
+      body: JSON.stringify({ mode, job_id: selectedJobId() }),
+    });
+    const text = d.reply || "(empty)";
+    status.textContent = text;
+    status.className = "agent-msg bot";
+    if (mode === "mock") {
+      toast("Mock started — answer in the chat box · type \"end mock\" to stop");
+      $("#agent-input").value = "";
+      $("#agent-input").focus();
+    }
+  } catch (e) {
+    status.textContent = "interview error: " + e.message;
+  } finally {
+    agentBusy = false;
+  }
+}
+
+$("#btn-interview-prep").addEventListener("click", () => agentInterview("prep"));
+$("#btn-interview-mock").addEventListener("click", () => agentInterview("mock"));
+
+$("#btn-agent-refresh").addEventListener("click", loadAgentStatus);
+
+$("#btn-agent-connect").addEventListener("click", async () => {
+  try {
+    const d = await api("/api/agent/connect", { method: "POST", body: JSON.stringify({ app: "gmail" }) });
+    $("#agent-status-line").textContent = d.instructions;
+    toast("Gmail connect instructions shown");
+  } catch (e) {
+    toast("connect failed: " + e.message);
+  }
+});
+
+$("#btn-draft-gmail").addEventListener("click", async () => {
+  const to = $("#draft-to").value.trim();
+  const subject = $("#draft-subject").value.trim();
+  const body = $("#draft-body").value.trim();
+  if (!(to && subject && body)) { toast("fill To / Subject / Body"); return; }
+  $("#draft-status").textContent = "creating draft…";
+  try {
+    const d = await api("/api/agent/draft", {
+      method: "POST",
+      body: JSON.stringify({ to, subject, body }),
+    });
+    $("#draft-status").textContent = d.ok
+      ? "✓ Gmail draft created — review it in Gmail"
+      : "draft failed: " + (d.error || "");
+  } catch (e) {
+    $("#draft-status").textContent = "draft failed: " + e.message;
+  }
+});
+
+loadAgentStatus();
