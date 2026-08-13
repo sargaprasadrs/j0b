@@ -337,7 +337,7 @@ $("#btn-email-draft-browser").addEventListener("click", async () => {
   const company = currentEmail ? currentEmail.company : "";
   if (!(to && subject && body)) { toast("fill To / Subject / Body first"); return; }
   const status = $("#email-draft-status");
-  status.textContent = "opening Gmail in your browser — creating the draft (takes ~10s)…";
+  status.textContent = "opening Gmail in your browser — if it asks you to sign in, use your Gmail account (once); creating the draft takes ~10s…";
   try {
     const d = await api("/api/email/draft", {
       method: "POST",
@@ -348,7 +348,7 @@ $("#btn-email-draft-browser").addEventListener("click", async () => {
     });
     status.textContent = d.ok
       ? "✓ Gmail draft created — review it in Gmail's Drafts, then send it yourself"
-      : "draft failed: " + (d.error || "make sure you ran 'Login to Gmail (once)'");
+      : "draft failed: " + (d.error || "sign in to Gmail in the window that opened, then retry");
     if (d.ok) {
       toast("draft saved to Gmail");
       loadTracker();

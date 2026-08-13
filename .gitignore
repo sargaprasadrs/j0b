@@ -4,6 +4,19 @@ data/
 *.env
 !data/.gitkeep
 
+# --- Gmail API credentials (never commit) ---
+client_secret.json
+token.json
+credentials.json
+
+# --- personal configuration (never commit) ---
+# every config.yaml holds your personal profile: name, email, phone,
+# LinkedIn, salary expectations, resume path. Use config.example.yaml as a
+# template:  cp config.example.yaml config.yaml  then fill in your details.
+config.yaml
+autoapply/config.yaml
+coldmail/config.yaml
+
 # --- python ---
 __pycache__/
 *.pyc

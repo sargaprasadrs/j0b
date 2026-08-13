@@ -71,10 +71,19 @@ def _build_system_prompt(cfg: dict) -> str:
 
 
 def generate_email(cfg: dict, company: str, role_title: str, notes: str = "",
-                   site_text: str = "", use_ai: bool = True) -> str:
-    """Return the plain-text email body for one startup (cached per company)."""
+                   site_text: str = "", use_ai: bool = True,
+                   fit_line: str = "") -> str:
+    """Return the plain-text email body for one startup (cached per company).
+
+    fit_line: an optional sentence naming the JD keywords that match the
+    candidate's skills (built by emailer.generate_cold_email). The email
+    always opens by naming the candidate, then explains fit for THIS role.
+    """
     sender = cfg.get("sender", {})
     sender_name = sender.get("name", "[Your Name]")
+    headline = sender.get("headline", "a developer")
+    summary = (sender.get("summary") or "").strip()
+    projects = sender.get("projects") or cfg.get("candidate", {}).get("projects", [])
     ask = cfg.get("outreach", {}).get("ask", "")
     signoff = cfg.get("outreach", {}).get("signoff", "Thanks,\n{sender_name}")
 
@@ -93,10 +102,13 @@ def generate_email(cfg: dict, company: str, role_title: str, notes: str = "",
         system = _build_system_prompt(cfg)
         prompt = (
             f"Write a polite and frank cold application email to {company}. "
-            f"Their open role / what they do: {role_title or notes or 'not specified'}. "
-            "Structure: greeting, one line on who you are and what you're asking, "
-            "one or two lines on relevant experience, one line on why this company, "
-            f"then the ask: '{ask}'. End with signature '{sender_name}'."
+            f"Their open role: {role_title or notes or 'not specified'}. "
+            + (f"The posting specifically asks for: {fit_line} " if fit_line else "")
+            + "Structure: greeting, one line naming the candidate and their headline, "
+            "one line explaining fit for this specific role, one or two lines on "
+            "relevant experience and projects, one line on why this company, "
+            f"then the ask: '{ask}'. End with signature '{sender_name}'. "
+            f"Always mention the candidate's name, {sender_name}."
         )
         body = _ollama_generate(base_url, model, system, prompt)
         if body:
@@ -104,24 +116,27 @@ def generate_email(cfg: dict, company: str, role_title: str, notes: str = "",
             _save_cache(cache)
             return body.strip()
 
-    # ---- Template fallback (polite + frank) ----
+    # ---- Template fallback (clean, polite + frank) ----
     what = role_title.strip() or notes.strip() or "your work"
+    fit = fit_line.strip() or (
+        f"I've read through the {what} description and it maps closely to "
+        "the work I do day to day.")
     lines = [
         f"Hi {company} team,",
         "",
-        f"I'm {sender_name} - {sender.get('headline','a developer')}. "
-        "I'm writing directly because I'd rather send one honest email "
-        "than a hundred applications that look the same.",
+        f"I'm {sender_name} - {headline}. I'm writing directly because I'd "
+        "rather send one honest email than a hundred applications that look "
+        f"the same, and the {what} role looks like a real fit.",
         "",
-        f"What I can do: {sender.get('summary','')}".strip(),
-        "",
-        f"I'm interested in {what}. If there's a problem I can help with - "
-        "even if it's not a formal open role - I'd like to talk.",
-        "",
-        ask.strip(),
-        "",
-        signoff.replace("{sender_name}", sender_name),
+        fit,
     ]
+    if summary:
+        lines += ["", f"What I can do: {summary}"]
+    if projects:
+        names = "; ".join(str(p).strip() for p in projects[:2])
+        lines += ["", f"A few things I've built: {names}."]
+    lines += ["", ask.strip(), "",
+              signoff.replace("{sender_name}", sender_name)]
     return "\n".join(lines)
 
 

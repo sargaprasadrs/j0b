@@ -19,7 +19,7 @@ def main() -> None:
     cfg = load_config()
     cfg["candidate"].update({
         "name": "Sarga Prasad RS",
-        "email": "sargaprasadrs@gmail.com",
+        "email": "candidate@example.com",
         "phone": "+91 90000 00000",
         "linkedin": "https://linkedin.com/in/sarga",
     })

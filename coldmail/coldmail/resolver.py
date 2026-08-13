@@ -41,8 +41,19 @@ def _norm_email(email: str) -> str:
     local, _, domain = email.partition("@")
     if not local or not domain:
         return ""
+    # real addresses have short local parts; sentence-length ones (AG Grid
+    # licence placeholders, template text) are never real inboxes
+    if len(local) > 40:
+        return ""
     local_base = re.sub(r"[^a-z]+", "", local)
     if local_base in PLACEHOLDER_LOCAL:
+        return ""
+    # template/placeholder phrases embedded in the local part (e.g. AG Grid's
+    # '___for_help_with_changing_this_key_please_contact_info@ag-grid.com')
+    if any(p in local for p in ("for_help_with", "please_contact",
+                                "change_this", "changethis", "your_email",
+                                "enter_email", "replace_this", "insert_your",
+                                "email_address", "put_your", "add_your")):
         return ""
     dom_base = domain.split(".")[0]
     if dom_base in PLACEHOLDER_DOMAIN:

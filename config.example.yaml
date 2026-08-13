@@ -1,0 +1,153 @@
+# ============================================================
+# j0b configuration — TEMPLATE (no personal data)
+# ============================================================
+# Your real config.yaml is gitignored because it holds personal details
+# (name, email, phone, LinkedIn, salary, resume path). To set up:
+#
+#     cp config.example.yaml config.yaml
+#
+# then fill in YOUR details in the candidate / sender / outreach sections.
+# Never commit config.yaml.
+#
+# The rest of this file (sources, send, match, agent, apply) can stay as-is.
+
+candidate:
+  name: Your Name
+  email: you@gmail.com
+  phone: ''
+  headline: 'Your one-line headline, e.g. Full-Stack & AI Software Engineer'
+  summary: 'Two or three sentences: who you are, what you build, what you want.'
+  skills:
+  - python
+  - react
+  - typescript
+  roles:
+  - software engineer
+  - full-stack engineer
+  years_of_exp: null
+  desired_salary_min: null
+  desired_salary_max: null
+  preferred_locations:
+  - remote
+  languages:
+  - 'english: fluent'
+  deal_breakers: []
+  star_examples: []
+  projects: []
+  education: ''
+  resume_path: ''            # e.g. C:\Users\you\j0b\autoapply\data\resume.pdf
+  linkedin: ''
+
+search:
+  keywords:
+  - python
+  - react
+  - ai
+  - backend
+  - full-stack
+  - devops
+  - cloud
+  limit: 50
+  locations: []
+  exp_min: 0
+  exp_max: 10
+
+sources:
+  remotive:
+    enabled: true
+  jobicy:
+    enabled: true
+  freehire:
+    enabled: true
+    base_url: https://freehire.me
+    regions: []
+    countries: []
+    cities: []
+    seniority: []
+    category: []
+    skills: []
+    work_mode: ''
+    jobage: 30
+  adzuna:
+    enabled: false          # optional; needs a free Adzuna app_id/app_key
+    app_id: ''
+    app_key: ''
+    country: gb
+  remoteok:
+    enabled: true
+  weworkremotely:
+    enabled: true
+  startupjobs:
+    enabled: true           # startup.jobs RSS - real startup companies, no key
+    workplace: remote       # remote | on-site | hybrid (RSS feed filter)
+  arbeitnow:
+    enabled: true           # Germany/EU + remote jobs, no key
+
+match:
+  mode: keywords
+  min_score: 30
+
+ollama:
+  base_url: http://localhost:11434
+  model: deepseek-r1:8b
+  use_ai: true
+
+agent:
+  opencode:
+    enabled: true
+    base_url: http://127.0.0.1:4096
+    bin: opencode
+  composio:
+    enabled: true
+    api_key: ''             # optional: paste your COMPOSIO_API_KEY here
+    apps:
+    - gmail
+  fallback:
+    base_url: http://localhost:11434
+    model: deepseek-r1:8b
+
+apply:
+  page_timeout: 45
+
+send:
+  mode: gmail_api           # gmail_api = save Gmail DRAFTS (never sends) | off = plan only
+  max_emails_per_run: 100
+  min_score: 30             # only draft matches scoring at least this (aligns with match.min_score)
+  delay_between_seconds: 2  # small pause between drafts
+  attach_resume: true
+  allow_guessed_recipients: true   # allow hello@domain guesses (verify before sending)
+  company_cooldown_days: 45        # never re-contact a company within this window
+  skip_senior_roles: true          # never draft senior/lead/principal/staff/manager roles
+  max_experience_years: 3          # never draft postings requiring more than this
+  email_engine: opencode           # opencode (free agent, no tools/permissions) | ollama | template
+  personalize_with_ai: false       # legacy flag: true = Ollama per-email (slower)
+
+sender:
+  name: Your Name
+  email: you@gmail.com
+  phone: ''
+  headline: 'Your one-line headline'
+  summary: 'Short summary used in email bodies.'
+  skills:
+  - python
+  - react
+  projects:
+  - Project one - what it does
+  resume_path: ''
+
+outreach:
+  tone: polite and frank
+  greeting: Hi
+  max_drafts: 10
+  ask: 'I''d genuinely like to help here. If there''s a role or an open
+    problem I could take a look at, I''d appreciate 10 minutes of your
+    time. Either way, thank you for reading this.'
+  signoff: 'Thanks,
+    {sender_name}'
+
+discovery:
+  sources:
+  - jobicy
+  - remotive
+  max_companies: 20
+  keywords: []

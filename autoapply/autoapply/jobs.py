@@ -1,5 +1,14 @@
-"""Fetch jobs from free/legal APIs: Remotive, Jobicy, optional Adzuna,
-and the freehire.me aggregator (tech-focused, multi-market, no API key).
+"""Fetch jobs from free/legal APIs (no API keys required):
+
+  * remotive     - https://remotive.com/api/remote-jobs (remote-only JSON)
+  * jobicy       - https://jobicy.com/api/v2/remote-jobs (remote-only JSON)
+  * freehire     - freehire.me aggregator (multi-market, full descriptions)
+  * remoteok     - https://remoteok.com/api (remote-only, startup-heavy JSON)
+  * weworkremotely- RSS feed of remote programming jobs (many startups)
+  * startupjobs  - https://startup.jobs/feeds/jobs (THE startup source -
+                   every posting is from a startup company; keyless RSS)
+  * arbeitnow    - https://www.arbeitnow.com/api/job-board-api (EU/remote JSON)
+  * adzuna       - optional, needs app_id/app_key (config sources.adzuna)
 
 Output shape (dict):
     id, title, company, location, url, source, description, salary, tags
@@ -16,6 +25,7 @@ import hashlib
 import json
 import re
 import time
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 import requests
@@ -219,6 +229,167 @@ def fetch_adzuna(cfg: dict, limit: int = 50) -> list[dict]:
     return jobs
 
 
+def _rss_items(url: str) -> list[ET.Element]:
+    """Fetch an RSS 2.0 feed and return its <item> elements (never raises)."""
+    try:
+        r = requests.get(url, headers=HEADERS, timeout=25)
+        r.raise_for_status()
+        return ET.fromstring(r.content).findall(".//item")
+    except Exception as exc:  # noqa: BLE001
+        print(f"  [rss] {url} failed: {exc}")
+        return []
+
+
+def fetch_remoteok(limit: int = 50) -> list[dict]:
+    """Remote OK (https://remoteok.com/api) - keyless JSON feed. Remote-only
+    and startup-heavy. Returns a JSON array where the first element is a
+    metadata/legal record and the rest are jobs."""
+    jobs: list[dict] = []
+    try:
+        r = requests.get("https://remoteok.com/api", headers=HEADERS, timeout=25)
+        r.raise_for_status()
+        data = r.json()
+    except Exception as exc:  # noqa: BLE001
+        print(f"  [remoteok] failed: {exc}")
+        return jobs
+    if not isinstance(data, list):
+        return jobs
+    for j in data[1:limit + 1]:
+        if not isinstance(j, dict) or not (j.get("position") or "").strip():
+            continue
+        lo, hi = j.get("salary_min") or 0, j.get("salary_max") or 0
+        salary = ""
+        if lo or hi:
+            def _usd(v: int) -> str:
+                return f"${v/1000:.0f}k" if v >= 1000 else f"${v}"
+            salary = f"{_usd(lo)}-{_usd(hi)}/yr" if lo and hi else \
+                f"{_usd(lo) or _usd(hi)}/yr"
+        jobs.append({
+            "id": _job_id("remoteok", j.get("url", "") or j.get("slug", "")),
+            "title": (j.get("position") or "").strip(),
+            "company": (j.get("company") or "").strip(),
+            "location": (j.get("location") or "Remote").strip(),
+            "url": j.get("url") or j.get("apply_url") or "",
+            "source": "remoteok",
+            "description": _clean(j.get("description", ""))[:4000],
+            "salary": salary,
+            "salaryMin": lo or None,
+            "salaryMax": hi or None,
+            "salaryCurrency": "USD",
+            "salaryPeriod": "yearly",
+            "tags": ", ".join(j.get("tags") or []),
+        })
+    return jobs
+
+
+def fetch_weworkremotely(limit: int = 50) -> list[dict]:
+    """We Work Remotely - keyless RSS feed of remote programming jobs
+    (https://weworkremotely.com/categories/remote-programming-jobs.rss).
+    Titles are "Company: Job Title"; <region> is the location."""
+    jobs: list[dict] = []
+    for item in _rss_items(
+            "https://weworkremotely.com/categories/remote-programming-jobs.rss"):
+        if len(jobs) >= limit:
+            break
+        title = (item.findtext("title") or "").strip()
+        link = (item.findtext("link") or "").strip()
+        if not title or not link:
+            continue
+        if ":" in title:
+            company, _, role = title.partition(":")
+            company, role = company.strip(), role.strip()
+        else:
+            company, role = "", title
+        if not role:
+            continue
+        region = (item.findtext("region") or "Remote").strip()
+        jobs.append({
+            "id": _job_id("weworkremotely", link),
+            "title": role,
+            "company": company,
+            "location": region or "Remote",
+            "url": link,
+            "source": "weworkremotely",
+            "description": _clean(item.findtext("description") or "")[:4000],
+            "salary": "",
+            "tags": (item.findtext("category") or "").strip(),
+        })
+    return jobs
+
+
+def fetch_startupjobs(limit: int = 50, workplace: str = "remote") -> list[dict]:
+    """Startup Jobs (https://startup.jobs) - keyless RSS feed of live startup
+    jobs (every posting is from a startup company). Titles are
+    "Job Title at Company". No API key needed: startup.jobs/feeds/jobs.
+    workplace: 'remote' | 'on-site' | 'hybrid' (RSS feed filter)."""
+    jobs: list[dict] = []
+    feed = "https://startup.jobs/feeds/jobs"
+    if workplace and str(workplace).strip():
+        feed += f"?workplace={str(workplace).strip().lower()}"
+    for item in _rss_items(feed):
+        if len(jobs) >= limit:
+            break
+        title = (item.findtext("title") or "").strip()
+        link = (item.findtext("link") or "").strip()
+        if not title:
+            continue
+        if " at " in title:
+            role, _, company = title.rpartition(" at ")
+            role, company = role.strip(), company.strip()
+        else:
+            role, company = title, ""
+        if not role:
+            continue
+        tags = ", ".join((c.text or "").strip() for c in item.findall("category"))
+        jobs.append({
+            "id": _job_id("startupjobs", link or title),
+            "title": role,
+            "company": company,
+            "location": "Remote",
+            "url": link,
+            "source": "startupjobs",
+            "description": _clean(item.findtext("description") or "")[:4000],
+            "salary": "",
+            "tags": tags,
+        })
+    return jobs
+
+
+def fetch_arbeitnow(limit: int = 50) -> list[dict]:
+    """Arbeitnow (https://www.arbeitnow.com/api/job-board-api) - keyless JSON
+    feed of jobs in Germany/EU incl. remote. No API key required."""
+    jobs: list[dict] = []
+    try:
+        r = requests.get("https://www.arbeitnow.com/api/job-board-api",
+                         params={"limit": min(int(limit or 25), 50)},
+                         headers=HEADERS, timeout=25)
+        r.raise_for_status()
+        data = r.json().get("data", [])
+    except Exception as exc:  # noqa: BLE001
+        print(f"  [arbeitnow] failed: {exc}")
+        return jobs
+    for j in data[:limit]:
+        location = (j.get("location") or "").strip()
+        if j.get("remote"):
+            location = f"{location} (remote)".strip() or "Remote"
+        if not location:
+            location = "Remote"
+        slug = j.get("slug") or ""
+        jobs.append({
+            "id": _job_id("arbeitnow", slug or j.get("url", "")),
+            "title": (j.get("title") or "").strip(),
+            "company": (j.get("company_name") or "").strip(),
+            "location": location,
+            "url": f"https://www.arbeitnow.com/jobs/{slug}" if slug \
+                else (j.get("url") or ""),
+            "source": "arbeitnow",
+            "description": _clean(j.get("description", ""))[:4000],
+            "salary": "",
+            "tags": ", ".join(j.get("tags") or []),
+        })
+    return jobs
+
+
 # --------------------------------------------------------------------------
 def fetch_all(cfg: dict) -> list[dict]:
     """Fetch from enabled sources, dedupe by company+title."""
@@ -240,6 +411,23 @@ def fetch_all(cfg: dict) -> list[dict]:
     if src_cfg.get("freehire", {}).get("enabled", True):
         print("[jobs] freehire ...")
         raw += fetch_freehire(cfg, limit)
+        time.sleep(0.4)
+    if src_cfg.get("remoteok", {}).get("enabled", True):
+        print("[jobs] remoteok ...")
+        raw += fetch_remoteok(limit)
+        time.sleep(0.4)
+    if src_cfg.get("weworkremotely", {}).get("enabled", True):
+        print("[jobs] weworkremotely ...")
+        raw += fetch_weworkremotely(limit)
+        time.sleep(0.4)
+    if src_cfg.get("startupjobs", {}).get("enabled", True):
+        print("[jobs] startupjobs (startup companies) ...")
+        workplace = src_cfg.get("startupjobs", {}).get("workplace", "remote")
+        raw += fetch_startupjobs(limit, workplace)
+        time.sleep(0.4)
+    if src_cfg.get("arbeitnow", {}).get("enabled", True):
+        print("[jobs] arbeitnow ...")
+        raw += fetch_arbeitnow(limit)
         time.sleep(0.4)
     if src_cfg.get("adzuna", {}).get("enabled", False):
         print("[jobs] adzuna ...")

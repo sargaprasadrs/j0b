@@ -6,3 +6,7 @@ pypdf>=4.0
 python-docx>=1.1
 playwright>=1.40
 composio>=0.18   # optional: authenticated agent tools (Gmail draft) — import is guarded
+# Gmail API drafts (auto_send.py daily drafter - never sends)
+google-api-python-client>=2.100
+google-auth-oauthlib>=1.1
+google-auth-httplib2>=0.1

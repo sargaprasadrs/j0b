@@ -167,8 +167,12 @@ class OpenCodeClient:
         except ValueError:
             return r.text
 
-    def create_session(self, title: str = "j0b agent") -> str:
-        data = self._req("POST", "/session", json={"title": title})
+    def create_session(self, title: str = "j0b agent",
+                       tools: list | None = None) -> str:
+        body: dict[str, Any] = {"title": title}
+        if tools is not None:
+            body["tools"] = tools   # [] = the agent gets NO tools at all
+        data = self._req("POST", "/session", json=body)
         if isinstance(data, dict):
             return str(data.get("id") or data.get("data", {}).get("id", ""))
         return str(data)

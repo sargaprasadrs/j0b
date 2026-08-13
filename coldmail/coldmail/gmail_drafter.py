@@ -2,9 +2,13 @@
 
 Design principles:
   * NEVER clicks the Send button. Drafts only.
-  * Persistent browser profile (data/browser_profile) so you log in once.
-  * Opens Gmail compose with the content pre-filled, waits for Gmail's
-    autosave indicator ("Draft saved"), closes the tab.
+  * Persistent isolated browser profile (data/browser_profile) so you sign in
+    ONCE and the session is reused. Your real Chrome profile is never touched.
+  * Uses the real installed Chrome (channel="chrome") when available, falling
+    back to Playwright's bundled Chromium.
+  * If the profile is not signed in yet, the window STAYS OPEN and waits for
+    you to sign in with your Gmail account (the account drafts will be sent
+    from) — then the draft is created in the same session.
 
 Requires:  python -m playwright install chromium
 """
@@ -20,21 +24,42 @@ from .config import DATA_DIR, ensure_data_dir
 
 PROFILE_DIR = DATA_DIR / "browser_profile"
 GMAIL = "https://mail.google.com/mail/u/0/#inbox"
+VIEWPORT = {"width": 1280, "height": 860}
+LOGIN_WAIT_S = 300  # how long to wait for the one-time sign-in
+
+
+def _launch_persistent(p, headless: bool = False):
+    """Open the real Chrome with the isolated profile dir (never the user's
+    daily profile). Falls back to bundled Chromium if Chrome is missing."""
+    opts = {"headless": headless, "viewport": VIEWPORT}
+    try:
+        return p.chromium.launch_persistent_context(
+            str(PROFILE_DIR), channel="chrome", **opts)
+    except Exception as exc:  # noqa: BLE001  (chrome missing / not launchable)
+        print(f"[gmail] real Chrome unavailable ({exc}) - using bundled Chromium")
+        return p.chromium.launch_persistent_context(str(PROFILE_DIR), **opts)
 
 
 def _wait_for_logged_in(page, timeout_s: float = 600) -> bool:
-    """Wait until the user has logged into Gmail manually."""
+    """Wait until the user has logged into Gmail manually.
+
+    Returns False if the window is closed or the timeout passes, so callers
+    can degrade gracefully instead of raising 'target closed' errors."""
     deadline = time.time() + timeout_s
     while time.time() < deadline:
-        url = page.url
-        if "accounts.google.com" not in url and "mail.google.com" in url:
-            # signed in if the sidebar / compose is present
-            try:
-                page.wait_for_selector('div[role="navigation"], a[href*="#inbox"]',
-                                       timeout=2000)
-                return True
-            except PlaywrightTimeout:
-                pass
+        try:
+            url = page.url
+            if "accounts.google.com" not in url and "mail.google.com" in url:
+                # signed in if the sidebar / compose is present
+                try:
+                    page.wait_for_selector('div[role="navigation"], a[href*="#inbox"]',
+                                           timeout=2000)
+                    return True
+                except PlaywrightTimeout:
+                    pass
+        except Exception:  # noqa: BLE001  (browser window closed by the user)
+            print("[gmail] browser window was closed - stopping the wait.")
+            return False
         time.sleep(1)
     return False
 
@@ -44,11 +69,10 @@ def login(timeout_s: float = 600) -> None:
     ensure_data_dir()
     PROFILE_DIR.mkdir(exist_ok=True)
     with sync_playwright() as p:
-        context = p.chromium.launch_persistent_context(
-            str(PROFILE_DIR), headless=False, viewport={"width": 1280, "height": 860}
-        )
+        context = _launch_persistent(p)
         page = context.new_page()
-        print("[gmail] opening Gmail - log in in the browser window...")
+        print("[gmail] opening Gmail - if you are not signed in, log in with "
+              "your Gmail account in this window (happens once)...")
         page.goto(GMAIL)
         if _wait_for_logged_in(page, timeout_s):
             print("[gmail] logged in. Session saved to data/browser_profile")
@@ -58,9 +82,15 @@ def login(timeout_s: float = 600) -> None:
         context.close()
 
 
-def _compose_url(email: str, subject: str, body: str) -> str:
+def _compose_url(email: str, subject: str, body: str, authuser: int = 0) -> str:
+    """Standalone Gmail compose URL.
+
+    authuser=0 = the default/first account of the signed-in profile (the one
+    you signed in with). If you ever sign in with several accounts, index 0
+    is the first one — drafts go to that account's inbox."""
     return (
         "https://mail.google.com/mail/?view=cm&fs=1"
+        f"&authuser={authuser}"
         f"&to={quote(email)}"
         f"&su={quote(subject)}"
         f"&body={quote(body)}"
@@ -82,10 +112,13 @@ def _fill_if_empty(page, selector, value: str) -> bool:
 
 
 def draft_emails(emails: list[dict], dry_run: bool = False,
-                 delay_s: float = 6.0, max_drafts: int = 10) -> list[str]:
+                 delay_s: float = 6.0, max_drafts: int = 10,
+                 expected_email: str = "") -> list[str]:
     """emails: [{'to','subject','body','company'}]. Creates Gmail drafts.
 
     dry_run=True only prints what would be drafted (no browser).
+    If the profile is not signed in yet, the browser stays open and waits for
+    the one-time sign-in, then creates the drafts in the same session.
     Returns the list of company names whose drafts were actually created,
     so the caller can mark only successes as 'drafted'.
     """
@@ -105,17 +138,23 @@ def draft_emails(emails: list[dict], dry_run: bool = False,
     succeeded: list[str] = []
     skipped = []
     with sync_playwright() as p:
-        context = p.chromium.launch_persistent_context(
-            str(PROFILE_DIR), headless=False, viewport={"width": 1280, "height": 860}
-        )
+        context = _launch_persistent(p)
         page = context.new_page()
         print("[gmail] opening Gmail...")
         page.goto(GMAIL)
-        if not _wait_for_logged_in(page, timeout_s=120):
-            print("[gmail] NOT logged in - run `python cli.py gmail login` first.")
-            context.close()
-            return []
-        print("[gmail] logged in.\n")
+
+        # short probe first so the sign-in message appears quickly when needed
+        if not _wait_for_logged_in(page, timeout_s=10):
+            who = f" with {expected_email}" if expected_email else ""
+            print(f"[gmail] NOT signed in yet. Sign in{who} in this browser "
+                  f"window (this happens once). Waiting up to "
+                  f"{LOGIN_WAIT_S} seconds for you...\n")
+            if not _wait_for_logged_in(page, timeout_s=LOGIN_WAIT_S):
+                print("[gmail] sign-in not detected after the wait - closing. "
+                      "Try again and complete the sign-in (or use `gmail login`).")
+                context.close()
+                return []
+        print("[gmail] signed in.\n")
 
         for em in emails:
             if created >= max_drafts:
@@ -125,7 +164,7 @@ def draft_emails(emails: list[dict], dry_run: bool = False,
             print(f"[gmail] drafting for {company} -> {em['to']} ...")
             tab = context.new_page()
             try:
-                tab.goto(_compose_url(em["to"], em["subject"], em["body"]),
+                tab.goto(_compose_url(em["to"], em["subject"], em["body"], authuser=0),
                          timeout=45000)
                 tab.wait_for_timeout(2500)
 
